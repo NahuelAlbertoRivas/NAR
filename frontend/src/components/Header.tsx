@@ -1,8 +1,6 @@
 import { useState } from 'react';
-import { Search, Download, Mail, X } from 'lucide-react';
-import NARLogo from './NARLogo';
-
-type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact' | 'admin';
+import { Search, Mail, X } from 'lucide-react';
+import type { Page } from '../types';
 
 interface HeaderProps {
   currentPage: Page;

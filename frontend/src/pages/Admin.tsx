@@ -2,9 +2,9 @@ import { ChangeEvent, useEffect, useState } from 'react';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/api/v1';
 
-function authHeaders() {
+function authHeaders(): Record<string, string> {
   const key = localStorage.getItem('adminKey') ?? '';
-  return key ? { 'x-admin-key': key } : {};
+  return key ? { 'x-admin-key': key, 'Content-Type': 'application/json' } : { 'Content-Type': 'application/json' };
 }
 
 type Tab = 'projects' | 'articles' | 'tech';
@@ -39,6 +39,7 @@ interface ProjectRecord {
   image?: string;
   github?: string;
   demo?: string;
+  videoUrl?: string;
   screenshots?: string[];
   timeline?: Array<{ date: string; event: string }>;
   challenges?: string[];
@@ -92,6 +93,7 @@ const defaultProjectForm = {
   image: '',
   github: '',
   demo: '',
+  videoUrl: '',
   screenshots: '',
   timeline: '[]',
   challenges: '',
@@ -350,7 +352,9 @@ export default function Admin() {
   }
 
   function handleInputChange(event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
-    const { name, type, value, checked } = event.target;
+    const target = event.target;
+    const { name, type, value } = target;
+    const checked = 'checked' in target ? target.checked : false;
     setFormState((prev) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value,
@@ -377,6 +381,7 @@ export default function Admin() {
       image: formState.image,
       github: formState.github,
       demo: formState.demo,
+      videoUrl: formState.videoUrl,
       screenshots: parseList(String(formState.screenshots ?? '')),
       timeline: parseJson<Array<{ date: string; event: string }>>(String(formState.timeline || '[]'), []),
       challenges: parseList(String(formState.challenges ?? '')),
@@ -465,17 +470,17 @@ export default function Admin() {
   async function confirmDelete() {
     try {
       if (modalType === 'project-delete') {
-        const res = await fetch(`${API_BASE}/projects/${modalData.id}`, { method: 'DELETE', headers: { ...authHeaders() } });
+        const res = await fetch(`${API_BASE}/projects/${modalData.id}`, { method: 'DELETE', headers: authHeaders() });
         if (!res.ok) throw new Error('Failed to delete project');
         await fetchProjects();
       }
       if (modalType === 'article-delete') {
-        const res = await fetch(`${API_BASE}/content/articles/${modalData.id}`, { method: 'DELETE', headers: { ...authHeaders() } });
+        const res = await fetch(`${API_BASE}/content/articles/${modalData.id}`, { method: 'DELETE', headers: authHeaders() });
         if (!res.ok) throw new Error('Failed to delete article');
         await fetchArticles();
       }
       if (modalType === 'tech-delete') {
-        const res = await fetch(`${API_BASE}/content/tech/${encodeURIComponent(modalData.name)}`, { method: 'DELETE', headers: { ...authHeaders() } });
+        const res = await fetch(`${API_BASE}/content/tech/${encodeURIComponent(modalData.name)}`, { method: 'DELETE', headers: authHeaders() });
         if (!res.ok) throw new Error('Failed to delete tech');
         await fetchTech();
       }
@@ -707,6 +712,10 @@ export default function Admin() {
               <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <span>Demo</span>
                 <input name="demo" value={formState.demo ?? ''} onChange={handleInputChange} style={inputStyle} />
+              </label>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                <span>Video URL</span>
+                <input name="videoUrl" value={formState.videoUrl ?? ''} onChange={handleInputChange} style={inputStyle} />
               </label>
               <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <span>Screenshots (coma separada)</span>

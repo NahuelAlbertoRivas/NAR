@@ -4,6 +4,7 @@ export interface ProjectRecord {
   slug?: string;
   shortDescription?: string;
   description?: string;
+  videoUrl?: string;
   problem?: string;
   architecture?: string;
   solution?: string;

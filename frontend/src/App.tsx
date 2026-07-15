@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { Page } from './types';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Home from './pages/Home';
@@ -11,8 +12,6 @@ import Tech from './pages/Tech';
 import Contact from './pages/Contact';
 import Admin from './pages/Admin';
 import { useEffect } from 'react';
-
-type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact' | 'admin';
 
 const SIDEBAR_WIDTH = 240;
 const HEADER_HEIGHT = 56;

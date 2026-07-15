@@ -75,6 +75,7 @@ export class ProjectsService {
           image: project.image,
           github: project.github,
           demo: project.demo,
+          video_url: project.videoUrl,
           screenshots: project.screenshots,
           timeline: project.timeline,
           challenges: project.challenges,
@@ -127,6 +128,7 @@ export class ProjectsService {
         if (body.image !== undefined) updatePayload.image = body.image;
         if (body.github !== undefined) updatePayload.github = body.github;
         if (body.demo !== undefined) updatePayload.demo = body.demo;
+        if (body.videoUrl !== undefined) updatePayload.video_url = body.videoUrl;
         if (body.screenshots !== undefined) updatePayload.screenshots = body.screenshots;
         if (body.timeline !== undefined) updatePayload.timeline = body.timeline;
         if (body.challenges !== undefined) updatePayload.challenges = body.challenges;
@@ -216,6 +218,7 @@ export class ProjectsService {
       image: record.image ? String(record.image) : undefined,
       github: record.github ? String(record.github) : undefined,
       demo: record.demo ? String(record.demo) : undefined,
+      videoUrl: record.video_url ? String(record.video_url) : record.videoUrl ? String(record.videoUrl) : undefined,
       screenshots: Array.isArray(record.screenshots) ? (record.screenshots as string[]) : undefined,
       timeline: record.timeline ?? undefined,
       challenges: Array.isArray(record.challenges) ? (record.challenges as string[]) : undefined,

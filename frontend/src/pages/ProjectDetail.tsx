@@ -8,6 +8,45 @@ interface ProjectDetailProps {
   onBack: () => void;
 }
 
+function getVideoEmbedDetails(videoUrl?: string) {
+  if (!videoUrl) return null;
+
+  const normalizedUrl = videoUrl.trim();
+  if (!normalizedUrl) return null;
+
+  const youtubeMatch = normalizedUrl.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+  if (youtubeMatch) {
+    return {
+      kind: 'iframe' as const,
+      url: `https://www.youtube.com/embed/${youtubeMatch[1]}`,
+      title: 'Video de YouTube',
+    };
+  }
+
+  const vimeoMatch = normalizedUrl.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) {
+    return {
+      kind: 'iframe' as const,
+      url: `https://player.vimeo.com/video/${vimeoMatch[1]}`,
+      title: 'Video de Vimeo',
+    };
+  }
+
+  if (/\.(mp4|webm|ogg)(\?.*)?$/i.test(normalizedUrl)) {
+    return {
+      kind: 'video' as const,
+      url: normalizedUrl,
+      title: 'Video directo',
+    };
+  }
+
+  return {
+    kind: 'link' as const,
+    url: normalizedUrl,
+    title: 'Abrir video',
+  };
+}
+
 export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
   const [project, setProject] = useState<Project | null>(null);
   const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState<number | null>(null);
@@ -148,17 +187,54 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
             <p style={{ margin: 0, fontSize: 15, color: '#94a3b8', lineHeight: 1.75 }}>{project.results}</p>
           </Section>
 
-          {/* Video placeholder */}
+          {/* Video demo */}
           <Section title="Demo en video">
-            <div style={{
-              height: 220, background: '#0b0e18', border: '1px solid #1a2234', borderRadius: 10,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12, cursor: 'pointer',
-            }}>
-              <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(37,99,235,0.15)', border: '1px solid rgba(37,99,235,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Play size={20} color="#2563eb" />
+            {project.videoUrl ? (() => {
+              const videoDetails = getVideoEmbedDetails(project.videoUrl);
+
+              if (videoDetails?.kind === 'iframe') {
+                return (
+                  <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid #1a2234', background: '#0b0e18' }}>
+                    <iframe
+                      src={videoDetails.url}
+                      title={videoDetails.title}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      style={{ width: '100%', height: 260, border: 0 }}
+                    />
+                  </div>
+                );
+              }
+
+              if (videoDetails?.kind === 'video') {
+                return (
+                  <div style={{ borderRadius: 10, overflow: 'hidden', border: '1px solid #1a2234', background: '#0b0e18', padding: 12 }}>
+                    <video controls style={{ width: '100%', maxHeight: 260, borderRadius: 8 }}>
+                      <source src={videoDetails.url} />
+                    </video>
+                  </div>
+                );
+              }
+
+              return (
+                <div style={{ minHeight: 220, background: '#0b0e18', border: '1px solid #1a2234', borderRadius: 10, padding: 20, display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 12 }}>
+                  <p style={{ margin: 0, fontSize: 14, color: '#94a3b8' }}>No pudimos procesar este video directamente, pero puedes abrirlo aquí:</p>
+                  <a href={project.videoUrl} target="_blank" rel="noopener noreferrer" style={{ color: '#38bdf8', textDecoration: 'none', fontWeight: 600 }}>
+                    {project.videoUrl}
+                  </a>
+                </div>
+              );
+            })() : (
+              <div style={{
+                height: 220, background: '#0b0e18', border: '1px solid #1a2234', borderRadius: 10,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12,
+              }}>
+                <div style={{ width: 48, height: 48, borderRadius: '50%', background: 'rgba(37,99,235,0.15)', border: '1px solid rgba(37,99,235,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Play size={20} color="#2563eb" />
+                </div>
+                <p style={{ margin: 0, fontSize: 13, color: '#475569' }}>Video demo próximamente</p>
               </div>
-              <p style={{ margin: 0, fontSize: 13, color: '#475569' }}>Video demo próximamente</p>
-            </div>
+            )}
           </Section>
         </div>
 

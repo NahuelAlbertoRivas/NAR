@@ -1,7 +1,6 @@
 import { Home, FolderOpen, BookOpen, Cpu, User, Mail, ChevronDown, ChevronUp, X } from 'lucide-react';
 import { useState } from 'react';
-
-type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact';
+import type { Page } from '../types';
 
 interface SidebarProps {
   currentPage: Page;

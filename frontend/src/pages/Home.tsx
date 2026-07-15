@@ -4,8 +4,6 @@ import {
   GitFork,
   ExternalLink,
   Cpu,
-  Zap,
-  GitBranch,
   BarChart3,
 } from "lucide-react";
 import { useEffect, useState } from "react";

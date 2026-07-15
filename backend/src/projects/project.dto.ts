@@ -3,6 +3,7 @@ export class CreateProjectDto {
   slug!: string;
   shortDescription!: string;
   published?: boolean;
+  videoUrl?: string;
 }
 
 export class UpdateProjectDto {
@@ -10,4 +11,5 @@ export class UpdateProjectDto {
   slug?: string;
   shortDescription?: string;
   published?: boolean;
+  videoUrl?: string;
 }

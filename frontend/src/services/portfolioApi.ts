@@ -20,6 +20,8 @@ interface PortfolioApiProject {
   image?: string;
   github?: string;
   demo?: string;
+  videoUrl?: string;
+  video_url?: string;
   screenshots?: string[] | unknown;
   timeline?: Array<{ date: string; event: string }> | unknown;
   challenges?: string[] | unknown;
@@ -110,6 +112,7 @@ function mapProject(record: PortfolioApiProject): Project {
     image: record.image ?? baseProject.image,
     github: record.github ?? baseProject.github,
     demo: record.demo ?? baseProject.demo,
+    videoUrl: record.videoUrl ?? (typeof record.video_url === 'string' ? record.video_url : baseProject.videoUrl),
     screenshots: normalizeStringArray(record.screenshots ?? baseProject.screenshots),
     timeline: Array.isArray(record.timeline) ? (record.timeline as Array<{ date: string; event: string }>) : baseProject.timeline,
     challenges: normalizeStringArray(record.challenges ?? baseProject.challenges),

@@ -19,6 +19,7 @@ export interface Project {
   image: string;
   github?: string;
   demo?: string;
+  videoUrl?: string;
   screenshots: string[];
   timeline: { date: string; event: string }[];
   challenges: string[];
