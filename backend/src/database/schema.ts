@@ -65,7 +65,14 @@ function parseConnectionDetails(rawUrl?: string): { host: string; port: number; 
 }
 
 export async function ensureDatabaseSchema(): Promise<void> {
+  // Only attempt schema initialization when Supabase credentials exist.
+  // Additionally, avoid running automatically in production unless explicitly enabled.
   if (!env.supabaseUrl || !env.supabaseServiceRoleKey) {
+    return;
+  }
+
+  if (env.nodeEnv === 'production' && process.env.ENABLE_DB_SCHEMA_INIT !== 'true') {
+    console.log('DB schema init skipped: running in production and ENABLE_DB_SCHEMA_INIT is not true');
     return;
   }
 
