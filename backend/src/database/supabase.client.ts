@@ -1,13 +1,13 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { env } from '../config/env';
 
-export const supabase = createClient(
-  env.supabaseUrl,
-  env.supabaseServiceRoleKey,
-  {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-    },
-  },
-);
+const hasSupabaseConfig = Boolean(env.supabaseUrl && env.supabaseServiceRoleKey);
+
+export const supabase: SupabaseClient | null = hasSupabaseConfig
+  ? createClient(env.supabaseUrl, env.supabaseServiceRoleKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    })
+  : null;

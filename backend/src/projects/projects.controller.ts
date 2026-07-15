@@ -8,29 +8,29 @@ export class ProjectsController {
   constructor(private readonly projectsService: ProjectsService) {}
 
   @Get()
-  findAll(@Query('published') published?: string): ProjectRecord[] {
+  async findAll(@Query('published') published?: string): Promise<ProjectRecord[]> {
     return this.projectsService.findAll(published === 'true');
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): ProjectRecord | null {
+  async findOne(@Param('id') id: string): Promise<ProjectRecord | null> {
     return this.projectsService.findOne(id);
   }
 
   @Post()
-  create(@Body() body: CreateProjectDto): ProjectRecord {
+  async create(@Body() body: CreateProjectDto): Promise<ProjectRecord> {
     this.validateCreatePayload(body);
     return this.projectsService.create(body);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() body: UpdateProjectDto): ProjectRecord | null {
+  async update(@Param('id') id: string, @Body() body: UpdateProjectDto): Promise<ProjectRecord | null> {
     this.validateUpdatePayload(body);
     return this.projectsService.update(id, body);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): ProjectRecord | null {
+  async remove(@Param('id') id: string): Promise<ProjectRecord | null> {
     return this.projectsService.remove(id);
   }
 

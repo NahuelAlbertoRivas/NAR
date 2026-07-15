@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { supabase } from '../database/supabase.client';
 import { ProjectRecord } from './project.types';
 
 @Injectable()
 export class ProjectsService {
-  private readonly projects: ProjectRecord[] = [
+  private readonly fallbackProjects: ProjectRecord[] = [
     {
       id: '1',
       title: 'Portfolio Profesional',
@@ -14,21 +15,32 @@ export class ProjectsService {
     },
   ];
 
-  findAll(published?: boolean) {
-    if (typeof published === 'boolean') {
-      return this.projects.filter((project) => project.published === published);
+  async findAll(published?: boolean): Promise<ProjectRecord[]> {
+    const fromSupabase = await this.fetchFromSupabase();
+    if (fromSupabase) {
+      const projects = fromSupabase.filter((project) =>
+        typeof published === 'boolean' ? project.published === published : true,
+      );
+      return projects;
     }
 
-    return this.projects;
+    return typeof published === 'boolean'
+      ? this.fallbackProjects.filter((project) => project.published === published)
+      : this.fallbackProjects;
   }
 
-  findOne(id: string) {
-    return this.projects.find((project) => project.id === id) ?? null;
+  async findOne(id: string): Promise<ProjectRecord | null> {
+    const fromSupabase = await this.fetchFromSupabase();
+    if (fromSupabase) {
+      return fromSupabase.find((project) => project.id === id) ?? null;
+    }
+
+    return this.fallbackProjects.find((project) => project.id === id) ?? null;
   }
 
-  create(body: Partial<ProjectRecord>) {
+  async create(body: Partial<ProjectRecord>): Promise<ProjectRecord> {
     const project: ProjectRecord = {
-      id: String(this.projects.length + 1),
+      id: String(this.fallbackProjects.length + 1),
       title: body.title ?? 'Nuevo proyecto',
       slug: body.slug ?? 'nuevo-proyecto',
       shortDescription: body.shortDescription ?? '',
@@ -37,32 +49,83 @@ export class ProjectsService {
       ...body,
     };
 
-    this.projects.push(project);
+    if (supabase) {
+      try {
+        const { data, error } = await supabase
+          .from('projects')
+          .insert({
+            title: project.title,
+            slug: project.slug,
+            short_description: project.shortDescription,
+            published: project.published,
+            created_at: project.createdAt,
+          })
+          .select()
+          .single();
+
+        if (!error && data) {
+          return this.toProjectRecord(data);
+        }
+      } catch {
+        // Fall back to the in-memory store if Supabase is unavailable.
+      }
+    }
+
+    this.fallbackProjects.push(project);
     return project;
   }
 
-  update(id: string, body: Partial<ProjectRecord>) {
-    const index = this.projects.findIndex((project) => project.id === id);
+  async update(id: string, body: Partial<ProjectRecord>): Promise<ProjectRecord | null> {
+    const index = this.fallbackProjects.findIndex((project) => project.id === id);
     if (index === -1) {
       return null;
     }
 
-    this.projects[index] = {
-      ...this.projects[index],
+    this.fallbackProjects[index] = {
+      ...this.fallbackProjects[index],
       ...body,
       updatedAt: new Date().toISOString(),
     };
 
-    return this.projects[index];
+    return this.fallbackProjects[index];
   }
 
-  remove(id: string) {
-    const index = this.projects.findIndex((project) => project.id === id);
+  async remove(id: string): Promise<ProjectRecord | null> {
+    const index = this.fallbackProjects.findIndex((project) => project.id === id);
     if (index === -1) {
       return null;
     }
 
-    const [removed] = this.projects.splice(index, 1);
+    const [removed] = this.fallbackProjects.splice(index, 1);
     return removed;
+  }
+
+  private async fetchFromSupabase(): Promise<ProjectRecord[] | null> {
+    if (!supabase) {
+      return null;
+    }
+
+    try {
+      const { data, error } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+      if (error) {
+        return null;
+      }
+
+      return (data ?? []).map((record) => this.toProjectRecord(record));
+    } catch {
+      return null;
+    }
+  }
+
+  private toProjectRecord(record: Record<string, unknown>): ProjectRecord {
+    return {
+      id: String(record.id ?? record.project_id ?? '0'),
+      title: String(record.title ?? ''),
+      slug: String(record.slug ?? ''),
+      shortDescription: String(record.short_description ?? record.shortDescription ?? ''),
+      published: Boolean(record.published),
+      createdAt: String(record.created_at ?? record.createdAt ?? new Date().toISOString()),
+      updatedAt: record.updated_at ? String(record.updated_at) : undefined,
+    };
   }
 }

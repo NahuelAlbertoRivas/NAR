@@ -1,0 +1,119 @@
+import { useState } from 'react';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Home from './pages/Home';
+import Projects from './pages/Projects';
+import ProjectDetail from './pages/ProjectDetail';
+import Articles from './pages/Articles';
+import About from './pages/About';
+import Tech from './pages/Tech';
+import Contact from './pages/Contact';
+
+type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact';
+
+const SIDEBAR_WIDTH = 240;
+const HEADER_HEIGHT = 56;
+
+export default function App() {
+  const [currentPage, setCurrentPage] = useState<Page>('home');
+  const [detailId, setDetailId] = useState<string | null>(null);
+  const [globalSearch, setGlobalSearch] = useState('');
+  const [sidebarSearch, setSidebarSearch] = useState('');
+  const [filters, setFilters] = useState({
+    technology: '',
+    language: '',
+    framework: '',
+    category: '',
+    status: '',
+    year: '',
+  });
+
+  const navigate = (page: string) => {
+    setCurrentPage(page as Page);
+    setDetailId(null);
+  };
+
+  const viewProject = (id: string) => {
+    setDetailId(id);
+    setCurrentPage('projects');
+  };
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const renderContent = () => {
+    if (currentPage === 'projects' && detailId) {
+      return <ProjectDetail projectId={detailId} onBack={() => setDetailId(null)} />;
+    }
+    switch (currentPage) {
+      case 'home': return <Home onNavigate={navigate} onViewProject={viewProject} />;
+      case 'projects': return <Projects filters={filters} search={sidebarSearch || globalSearch} onViewProject={viewProject} />;
+      case 'articles': return <Articles />;
+      case 'about': return <About />;
+      case 'tech': return <Tech />;
+      case 'contact': return <Contact />;
+      default: return null;
+    }
+  };
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#060810' }}>
+      <Header
+        currentPage={currentPage}
+        onNavigate={navigate}
+        globalSearch={globalSearch}
+        onGlobalSearch={setGlobalSearch}
+      />
+      <Sidebar
+        currentPage={currentPage}
+        onNavigate={navigate}
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        search={sidebarSearch}
+        onSearch={setSidebarSearch}
+      />
+
+      {/* Main content */}
+      <main
+        style={{
+          marginLeft: SIDEBAR_WIDTH,
+          marginTop: HEADER_HEIGHT,
+          minHeight: `calc(100vh - ${HEADER_HEIGHT}px)`,
+          padding: '0 40px',
+          position: 'relative',
+        }}
+      >
+        {renderContent()}
+
+        {/* Footer */}
+        <footer style={{
+          borderTop: '1px solid #1a2234',
+          padding: '24px 0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span style={{ fontSize: 12, color: '#334155' }}>© 2025 NAR Development</span>
+            <span style={{ fontSize: 12, color: '#1e293b' }}>·</span>
+            <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#1e293b', background: '#0b0e18', border: '1px solid #1a2234', borderRadius: 4, padding: '2px 6px' }}>v1.0.0</span>
+          </div>
+          <div style={{ display: 'flex', gap: 16 }}>
+            {(['home', 'projects', 'articles', 'about', 'tech', 'contact'] as Page[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => navigate(p)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: 12, color: '#334155', textTransform: 'capitalize', transition: 'color 0.15s' }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#64748b'; }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#334155'; }}
+              >
+                {p === 'about' ? 'Sobre mí' : p === 'tech' ? 'Tech Stack' : p.charAt(0).toUpperCase() + p.slice(1)}
+              </button>
+            ))}
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+}
