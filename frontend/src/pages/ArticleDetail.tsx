@@ -84,7 +84,7 @@ export default function ArticleDetail({ articleId, onBack }: ArticleDetailProps)
         </h1>
 
         <p style={{ margin: '0 0 20px', fontSize: 16, color: '#94a3b8', lineHeight: 1.8 }}>
-          {article.summary}
+          {article.description}
         </p>
 
         {article.tags.length > 0 && (
