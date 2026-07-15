@@ -8,8 +8,9 @@ import Articles from './pages/Articles';
 import About from './pages/About';
 import Tech from './pages/Tech';
 import Contact from './pages/Contact';
+import Admin from './pages/Admin';
 
-type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact';
+type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact' | 'admin';
 
 const SIDEBAR_WIDTH = 240;
 const HEADER_HEIGHT = 56;
@@ -53,6 +54,7 @@ export default function App() {
       case 'about': return <About />;
       case 'tech': return <Tech />;
       case 'contact': return <Contact />;
+      case 'admin': return <Admin />;
       default: return null;
     }
   };

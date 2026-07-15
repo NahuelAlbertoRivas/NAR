@@ -81,10 +81,25 @@ export class ProjectsService {
   }
 
   async update(id: string, body: Partial<ProjectRecord>): Promise<ProjectRecord | null> {
-    const index = this.fallbackProjects.findIndex((project) => project.id === id);
-    if (index === -1) {
-      return null;
+    if (supabase) {
+      try {
+        const updatePayload: Record<string, unknown> = {};
+        if (body.title !== undefined) updatePayload.title = body.title;
+        if (body.slug !== undefined) updatePayload.slug = body.slug;
+        if (body.shortDescription !== undefined) updatePayload.short_description = body.shortDescription;
+        if (body.published !== undefined) updatePayload.published = body.published;
+
+        const { data, error } = await supabase.from('projects').update(updatePayload).eq('id', id).select().single();
+        if (!error && data) {
+          return this.toProjectRecord(data as Record<string, unknown>);
+        }
+      } catch {
+        // fall through to fallback store
+      }
     }
+
+    const index = this.fallbackProjects.findIndex((project) => project.id === id);
+    if (index === -1) return null;
 
     this.fallbackProjects[index] = {
       ...this.fallbackProjects[index],
@@ -96,11 +111,19 @@ export class ProjectsService {
   }
 
   async remove(id: string): Promise<ProjectRecord | null> {
-    const index = this.fallbackProjects.findIndex((project) => project.id === id);
-    if (index === -1) {
-      return null;
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('projects').delete().eq('id', id).select().single();
+        if (!error && data) {
+          return this.toProjectRecord(data as Record<string, unknown>);
+        }
+      } catch {
+        // fall through to fallback
+      }
     }
 
+    const index = this.fallbackProjects.findIndex((project) => project.id === id);
+    if (index === -1) return null;
     const [removed] = this.fallbackProjects.splice(index, 1);
     return removed;
   }

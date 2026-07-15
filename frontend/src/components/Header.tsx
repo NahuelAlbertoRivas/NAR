@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Search, Download, Mail, X } from 'lucide-react';
 import NARLogo from './NARLogo';
 
-type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact';
+type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact' | 'admin';
 
 interface HeaderProps {
   currentPage: Page;
@@ -17,6 +17,7 @@ const navItems: { key: Page; label: string }[] = [
   { key: 'articles', label: 'Artículos' },
   { key: 'about', label: 'Sobre mí' },
   { key: 'tech', label: 'Tech Stack' },
+  { key: 'admin', label: 'Admin' },
 ];
 
 export default function Header({ currentPage, onNavigate, globalSearch, onGlobalSearch }: HeaderProps) {

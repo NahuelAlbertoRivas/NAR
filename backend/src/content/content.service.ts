@@ -113,4 +113,157 @@ export class ContentService {
       return this.fallbackTechStack;
     }
   }
+
+  // Admin operations
+  async createArticle(body: Partial<ArticleRecord>): Promise<ArticleRecord> {
+    const article: ArticleRecord = {
+      id: body.id ?? String(Date.now()),
+      title: body.title ?? 'Untitled',
+      summary: body.summary ?? '',
+      readTime: body.readTime ?? 0,
+      tags: body.tags ?? [],
+      date: body.date ?? new Date().toISOString(),
+      url: body.url,
+    };
+
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('articles').insert({
+          id: article.id,
+          title: article.title,
+          summary: article.summary,
+          read_time: article.readTime,
+          tags: article.tags,
+          date: article.date,
+          url: article.url,
+        }).select().single();
+
+        if (!error && data) return this.toArticleRecord(data as Record<string, unknown>);
+      } catch {
+        // fall through
+      }
+    }
+
+    this.fallbackArticles.unshift(article);
+    return article;
+  }
+
+  async updateArticle(id: string, body: Partial<ArticleRecord>): Promise<ArticleRecord | null> {
+    if (supabase) {
+      try {
+        const update: Record<string, unknown> = {};
+        if (body.title !== undefined) update.title = body.title;
+        if (body.summary !== undefined) update.summary = body.summary;
+        if (body.readTime !== undefined) update.read_time = body.readTime;
+        if (body.tags !== undefined) update.tags = body.tags;
+        if (body.date !== undefined) update.date = body.date;
+        if (body.url !== undefined) update.url = body.url;
+
+        const { data, error } = await supabase.from('articles').update(update).eq('id', id).select().single();
+        if (!error && data) return this.toArticleRecord(data as Record<string, unknown>);
+      } catch {
+        // fall through
+      }
+    }
+
+    const idx = this.fallbackArticles.findIndex((a) => a.id === id);
+    if (idx === -1) return null;
+    this.fallbackArticles[idx] = { ...this.fallbackArticles[idx], ...body } as ArticleRecord;
+    return this.fallbackArticles[idx];
+  }
+
+  async deleteArticle(id: string): Promise<ArticleRecord | null> {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('articles').delete().eq('id', id).select().single();
+        if (!error && data) return this.toArticleRecord(data as Record<string, unknown>);
+      } catch {
+        // fall through
+      }
+    }
+
+    const idx = this.fallbackArticles.findIndex((a) => a.id === id);
+    if (idx === -1) return null;
+    const [removed] = this.fallbackArticles.splice(idx, 1);
+    return removed;
+  }
+
+  async createTechItem(body: Partial<TechStackItem>): Promise<TechStackItem> {
+    const item: TechStackItem = {
+      name: body.name ?? `tech-${Date.now()}`,
+      category: body.category ?? 'Other',
+      icon: body.icon ?? '',
+      level: body.level ?? 0,
+    };
+
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('tech_stack').insert(item).select().single();
+        if (!error && data) return this.toTechRecord(data as Record<string, unknown>);
+      } catch {
+        // fall through
+      }
+    }
+
+    this.fallbackTechStack.push(item);
+    return item;
+  }
+
+  async updateTechItem(name: string, body: Partial<TechStackItem>): Promise<TechStackItem | null> {
+    if (supabase) {
+      try {
+        const update: Record<string, unknown> = {};
+        if (body.category !== undefined) update.category = body.category;
+        if (body.icon !== undefined) update.icon = body.icon;
+        if (body.level !== undefined) update.level = body.level;
+
+        const { data, error } = await supabase.from('tech_stack').update(update).eq('name', name).select().single();
+        if (!error && data) return this.toTechRecord(data as Record<string, unknown>);
+      } catch {
+        // fall through
+      }
+    }
+
+    const idx = this.fallbackTechStack.findIndex((t) => t.name === name);
+    if (idx === -1) return null;
+    this.fallbackTechStack[idx] = { ...this.fallbackTechStack[idx], ...body } as TechStackItem;
+    return this.fallbackTechStack[idx];
+  }
+
+  async deleteTechItem(name: string): Promise<TechStackItem | null> {
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('tech_stack').delete().eq('name', name).select().single();
+        if (!error && data) return this.toTechRecord(data as Record<string, unknown>);
+      } catch {
+        // fall through
+      }
+    }
+
+    const idx = this.fallbackTechStack.findIndex((t) => t.name === name);
+    if (idx === -1) return null;
+    const [removed] = this.fallbackTechStack.splice(idx, 1);
+    return removed;
+  }
+
+  private toArticleRecord(r: Record<string, unknown>): ArticleRecord {
+    return {
+      id: String(r.id ?? r.article_id ?? ''),
+      title: String(r.title ?? ''),
+      summary: String(r.summary ?? r.excerpt ?? ''),
+      readTime: Number(r.read_time ?? r.readTime ?? 0),
+      tags: Array.isArray(r.tags) ? (r.tags as string[]) : String(r.tags ?? '').split(',').map((s) => s.trim()).filter(Boolean),
+      date: String(r.date ?? r.published_at ?? ''),
+      url: r.url ? String(r.url) : undefined,
+    };
+  }
+
+  private toTechRecord(r: Record<string, unknown>): TechStackItem {
+    return {
+      name: String(r.name ?? ''),
+      category: String(r.category ?? 'Other'),
+      icon: String(r.icon ?? ''),
+      level: Number(r.level ?? 0),
+    };
+  }
 }

@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, Query, BadRequestException, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, Query, BadRequestException, Inject, UseGuards } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { ProjectRecord } from './project.types';
 import { CreateProjectDto, UpdateProjectDto } from './project.dto';
+import { AdminGuard } from '../auth/admin.guard';
 
 @Controller('projects')
 export class ProjectsController {
@@ -24,18 +25,21 @@ export class ProjectsController {
   }
 
   @Post()
+  @UseGuards(AdminGuard)
   async create(@Body() body: CreateProjectDto): Promise<ProjectRecord> {
     this.validateCreatePayload(body);
     return this.projectsService.create(body);
   }
 
   @Patch(':id')
+  @UseGuards(AdminGuard)
   async update(@Param('id') id: string, @Body() body: UpdateProjectDto): Promise<ProjectRecord | null> {
     this.validateUpdatePayload(body);
     return this.projectsService.update(id, body);
   }
 
   @Delete(':id')
+  @UseGuards(AdminGuard)
   async remove(@Param('id') id: string): Promise<ProjectRecord | null> {
     return this.projectsService.remove(id);
   }
