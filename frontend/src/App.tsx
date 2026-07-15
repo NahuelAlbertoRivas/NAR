@@ -9,6 +9,7 @@ import About from './pages/About';
 import Tech from './pages/Tech';
 import Contact from './pages/Contact';
 import Admin from './pages/Admin';
+import { useEffect } from 'react';
 
 type Page = 'home' | 'projects' | 'articles' | 'about' | 'tech' | 'contact' | 'admin';
 
@@ -31,8 +32,27 @@ export default function App() {
 
   const navigate = (page: string) => {
     setCurrentPage(page as Page);
+    // update URL for direct access
+    try {
+      const path = page === 'home' ? '/' : `/${page}`;
+      window.history.replaceState({}, '', path);
+    } catch (e) {
+      // ignore during SSR or restricted environments
+    }
     setDetailId(null);
   };
+
+  useEffect(() => {
+    // On mount, sync page from URL path (support direct /admin access)
+    try {
+      const p = window.location.pathname.replace(/^\//, '');
+      if (!p) return;
+      if (p === 'admin') setCurrentPage('admin');
+      // for project detail paths like /projects/:slug we keep default behavior
+    } catch (e) {
+      // ignore
+    }
+  }, []);
 
   const viewProject = (id: string) => {
     setDetailId(id);

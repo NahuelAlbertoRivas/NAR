@@ -17,7 +17,6 @@ const navItems: { key: Page; label: string }[] = [
   { key: 'articles', label: 'Artículos' },
   { key: 'about', label: 'Sobre mí' },
   { key: 'tech', label: 'Tech Stack' },
-  { key: 'admin', label: 'Admin' },
 ];
 
 export default function Header({ currentPage, onNavigate, globalSearch, onGlobalSearch }: HeaderProps) {
