@@ -86,6 +86,24 @@ async function readJson<T>(path: string): Promise<T | null> {
   }
 }
 
+async function postJson<T>(path: string, body: unknown): Promise<T | null> {
+  try {
+    const response = await fetch(`${API_BASE_URL}${path}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    return (await response.json()) as T;
+  } catch {
+    return null;
+  }
+}
+
 export async function getProjects(): Promise<Project[]> {
   const data = await readJson<PortfolioApiProject[]>('/projects');
   if (Array.isArray(data) && data.length > 0) {
@@ -120,4 +138,13 @@ export async function getTechStack(): Promise<Array<{ name: string; category: st
   }
 
   return fallbackTechStack;
+}
+
+export async function submitContactMessage(payload: { name: string; email: string; subject: string; message: string }) {
+  const data = await postJson<{ id: string; submittedAt: string }>( '/contact', payload);
+  if (data) {
+    return { ok: true, data };
+  }
+
+  return { ok: false, data: null };
 }

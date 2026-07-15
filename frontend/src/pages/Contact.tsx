@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { GitFork, Link, Mail, Download, Send, CheckCircle2 } from 'lucide-react';
+import { submitContactMessage } from '../services/portfolioApi';
 
 interface ContactFormState {
   name: string;
@@ -33,7 +34,7 @@ export default function Contact() {
     return form.name.trim() && form.email.trim() && form.subject.trim() && form.message.trim();
   }, [form]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) {
       setError('Completa todos los campos para enviar el mensaje.');
@@ -49,6 +50,27 @@ export default function Contact() {
       id: `msg-${Date.now()}`,
     };
 
+    const result = await submitContactMessage(form);
+
+    if (result.ok) {
+      try {
+        const stored = window.localStorage.getItem('portfolio-contact-messages');
+        const previous = stored ? JSON.parse(stored) : [];
+        const next = Array.isArray(previous) ? [...previous, messagePayload] : [messagePayload];
+        window.localStorage.setItem('portfolio-contact-messages', JSON.stringify(next));
+        setMessagesCount(next.length);
+      } catch {
+        setMessagesCount((count) => count + 1);
+      }
+
+      window.setTimeout(() => {
+        setSending(false);
+        setSent(true);
+        setForm(initialForm);
+      }, 900);
+      return;
+    }
+
     try {
       const stored = window.localStorage.getItem('portfolio-contact-messages');
       const previous = stored ? JSON.parse(stored) : [];
@@ -56,9 +78,7 @@ export default function Contact() {
       window.localStorage.setItem('portfolio-contact-messages', JSON.stringify(next));
       setMessagesCount(next.length);
     } catch {
-      setError('No se pudo guardar el mensaje localmente. Inténtalo de nuevo.');
-      setSending(false);
-      return;
+      setMessagesCount((count) => count + 1);
     }
 
     window.setTimeout(() => {
