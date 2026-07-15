@@ -6,6 +6,24 @@ interface PortfolioApiProject {
   title?: string;
   shortDescription?: string;
   description?: string;
+  problem?: string;
+  architecture?: string;
+  solution?: string;
+  results?: string;
+  technologies?: string[] | unknown;
+  languages?: string[] | unknown;
+  frameworks?: string[] | unknown;
+  category?: string;
+  status?: string;
+  year?: number;
+  featured?: boolean;
+  image?: string;
+  github?: string;
+  demo?: string;
+  screenshots?: string[] | unknown;
+  timeline?: Array<{ date: string; event: string }> | unknown;
+  challenges?: string[] | unknown;
+  metrics?: Array<{ label: string; value: string }> | unknown;
   published?: boolean;
   createdAt?: string;
   updatedAt?: string;
@@ -38,6 +56,21 @@ function buildPlaceholderProject(id: string, title: string): Project {
   };
 }
 
+function normalizeStringArray(value: unknown): string[] {
+  if (Array.isArray(value)) {
+    return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+  }
+
+  if (typeof value === 'string') {
+    return value
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
 function mapProject(record: PortfolioApiProject): Project {
   const normalizedTitle = record.title?.toLowerCase() ?? '';
   const fallback = fallbackProjects.find((project) => {
@@ -55,21 +88,32 @@ function mapProject(record: PortfolioApiProject): Project {
     );
   });
 
-  if (fallback) {
-    return {
-      ...fallback,
-      id: record.id ?? fallback.id,
-      title: record.title ?? fallback.title,
-      shortDescription: record.shortDescription ?? fallback.shortDescription,
-      description: record.description ?? fallback.description,
-    };
-  }
+  const baseProject = fallback ?? buildPlaceholderProject((record.slug ?? record.title ?? record.id ?? 'portfolio-project').toLowerCase(), record.title ?? 'Proyecto del portfolio');
 
-  const fallbackId = (record.slug ?? record.title ?? record.id ?? 'portfolio-project').toLowerCase();
   return {
-    ...buildPlaceholderProject(fallbackId, record.title ?? 'Proyecto del portfolio'),
-    shortDescription: record.shortDescription ?? 'Proyecto del portfolio',
-    description: record.description ?? 'Descripción pendiente.',
+    ...baseProject,
+    id: record.id ?? baseProject.id,
+    title: record.title ?? baseProject.title,
+    shortDescription: record.shortDescription ?? baseProject.shortDescription,
+    description: record.description ?? baseProject.description,
+    problem: record.problem ?? baseProject.problem,
+    architecture: record.architecture ?? baseProject.architecture,
+    solution: record.solution ?? baseProject.solution,
+    results: record.results ?? baseProject.results,
+    technologies: normalizeStringArray(record.technologies ?? baseProject.technologies),
+    languages: normalizeStringArray(record.languages ?? baseProject.languages),
+    frameworks: normalizeStringArray(record.frameworks ?? baseProject.frameworks),
+    category: record.category ?? baseProject.category,
+    status: (record.status === 'in-progress' ? 'in-progress' : 'completed') as Project['status'],
+    year: record.year ?? baseProject.year,
+    featured: Boolean(record.featured ?? baseProject.featured),
+    image: record.image ?? baseProject.image,
+    github: record.github ?? baseProject.github,
+    demo: record.demo ?? baseProject.demo,
+    screenshots: normalizeStringArray(record.screenshots ?? baseProject.screenshots),
+    timeline: Array.isArray(record.timeline) ? (record.timeline as Array<{ date: string; event: string }>) : baseProject.timeline,
+    challenges: normalizeStringArray(record.challenges ?? baseProject.challenges),
+    metrics: Array.isArray(record.metrics) ? (record.metrics as Array<{ label: string; value: string }>) : baseProject.metrics,
   };
 }
 
