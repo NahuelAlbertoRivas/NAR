@@ -14,8 +14,8 @@ export class ProjectsController {
 
   @Get()
   async findAll(@Query('published') published?: string): Promise<ProjectRecord[]> {
-    console.log('ProjectsController.findAll, service=', this.projectsService);
-    return this.projectsService.findAll(published === 'true');
+    const publishedFlag = published === undefined ? undefined : published === 'true';
+    return this.projectsService.findAll(publishedFlag);
   }
 
   @Get(':id')

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { randomUUID } from 'crypto';
 import { supabase } from '../database/supabase.client';
 import { ProjectRecord } from './project.types';
 
@@ -43,7 +44,7 @@ export class ProjectsService {
 
   async create(body: Partial<ProjectRecord>): Promise<ProjectRecord> {
     const project: ProjectRecord = {
-      id: String(this.fallbackProjects.length + 1),
+      id: randomUUID(),
       title: body.title ?? 'Nuevo proyecto',
       slug: body.slug ?? 'nuevo-proyecto',
       shortDescription: body.shortDescription ?? '',
@@ -57,6 +58,7 @@ export class ProjectsService {
         const { data, error } = await supabase
           .from('projects')
           .insert({
+            id: project.id,
             title: project.title,
             slug: project.slug,
             short_description: project.shortDescription,
