@@ -79,7 +79,6 @@ export class ProjectsService {
           timeline: project.timeline,
           challenges: project.challenges,
           metrics: project.metrics,
-          tags: project.tags,
           read_time: project.readTime,
           date: project.date,
           url: project.url,
@@ -134,7 +133,6 @@ export class ProjectsService {
         if (body.timeline !== undefined) updatePayload.timeline = body.timeline;
         if (body.challenges !== undefined) updatePayload.challenges = body.challenges;
         if (body.metrics !== undefined) updatePayload.metrics = body.metrics;
-        if (body.tags !== undefined) updatePayload.tags = body.tags;
         if (body.readTime !== undefined) updatePayload.read_time = body.readTime;
         if (body.date !== undefined) updatePayload.date = body.date;
         if (body.url !== undefined) updatePayload.url = body.url;

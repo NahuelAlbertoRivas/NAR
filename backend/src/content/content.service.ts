@@ -84,7 +84,7 @@ export class ContentService {
         id: String(r.id ?? r.article_id ?? ''),
         title: String(r.title ?? ''),
         slug: r.slug ? String(r.slug) : undefined,
-        summary: String(r.summary ?? r.excerpt ?? ''),
+        summary: String(r.summary ?? r.short_description ?? r.excerpt ?? ''),
         description: r.description ? String(r.description) : undefined,
         readTime: Number(r.read_time ?? r.readTime ?? 0),
         tags: Array.isArray(r.tags) ? (r.tags as string[]) : String(r.tags ?? '').split(',').map((s) => s.trim()).filter(Boolean),
@@ -113,7 +113,7 @@ export class ContentService {
         id: String(r.id ?? r.article_id ?? ''),
         title: String(r.title ?? ''),
         slug: r.slug ? String(r.slug) : undefined,
-        summary: String(r.summary ?? r.excerpt ?? ''),
+        summary: String(r.summary ?? r.short_description ?? r.excerpt ?? ''),
         description: r.description ? String(r.description) : undefined,
         readTime: Number(r.read_time ?? r.readTime ?? 0),
         tags: Array.isArray(r.tags) ? (r.tags as string[]) : String(r.tags ?? '').split(',').map((s) => s.trim()).filter(Boolean),
@@ -169,7 +169,7 @@ export class ContentService {
           id: article.id,
           title: article.title,
           slug: article.slug,
-          summary: article.summary,
+          short_description: article.summary || article.description || undefined,
           description: article.description,
           read_time: article.readTime,
           tags: article.tags,
@@ -204,7 +204,7 @@ export class ContentService {
         const update: Record<string, unknown> = {};
         if (body.title !== undefined) update.title = body.title;
         if (body.slug !== undefined) update.slug = body.slug;
-        if (body.summary !== undefined) update.summary = body.summary;
+        if (body.summary !== undefined) update.short_description = body.summary;
         if (body.description !== undefined) update.description = body.description;
         if (body.readTime !== undefined) update.read_time = body.readTime;
         if (body.tags !== undefined) update.tags = body.tags;
@@ -321,7 +321,7 @@ export class ContentService {
       id: String(r.id ?? r.article_id ?? ''),
       title: String(r.title ?? ''),
       slug: r.slug ? String(r.slug) : undefined,
-      summary: String(r.summary ?? r.excerpt ?? ''),
+      summary: String(r.summary ?? r.short_description ?? r.excerpt ?? ''),
       description: r.description ? String(r.description) : undefined,
       readTime: Number(r.read_time ?? r.readTime ?? 0),
       tags: Array.isArray(r.tags) ? (r.tags as string[]) : String(r.tags ?? '').split(',').map((s) => s.trim()).filter(Boolean),
