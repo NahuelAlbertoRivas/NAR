@@ -221,7 +221,7 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
           onClick={closeScreenshot}
           style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 24 }}
         >
-          <div onClick={(event) => event.stopPropagation()} style={{ position: 'relative', width: 'min(100%, 1100px)', maxHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <div onClick={(event) => event.stopPropagation()} style={{ position: 'relative', width: 'min(100%, 1100px)', maxWidth: '100%', maxHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'hidden', boxSizing: 'border-box', padding: '6px 0' }}>
             <button
               type="button"
               onClick={closeScreenshot}
@@ -255,7 +255,7 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
             <img src={project.screenshots[selectedScreenshotIndex]} alt="Captura ampliada" style={{ width: '100%', maxHeight: '85vh', objectFit: 'contain', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }} />
 
             {project.screenshots.length > 1 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, marginTop: 14, maxWidth: '100%' }}>
+              <div style={{ display: 'flex', flexWrap: 'nowrap', justifyContent: 'center', alignItems: 'center', gap: 10, marginTop: 14, maxWidth: 'min(100%, 700px)', overflowX: 'auto', overflowY: 'hidden', paddingBottom: 4, scrollbarWidth: 'thin' as const }}>
                 {project.screenshots.map((screenshot, index) => (
                   <button
                     key={index}
