@@ -80,7 +80,6 @@ export class ProjectsService {
           challenges: project.challenges,
           metrics: project.metrics,
           read_time: project.readTime,
-          date: project.date,
           url: project.url,
           published: project.published,
           created_at: project.createdAt,
@@ -134,7 +133,6 @@ export class ProjectsService {
         if (body.challenges !== undefined) updatePayload.challenges = body.challenges;
         if (body.metrics !== undefined) updatePayload.metrics = body.metrics;
         if (body.readTime !== undefined) updatePayload.read_time = body.readTime;
-        if (body.date !== undefined) updatePayload.date = body.date;
         if (body.url !== undefined) updatePayload.url = body.url;
 
         const { data, error } = await supabase.from('projects').update(updatePayload).eq('id', id).select().single();
