@@ -97,11 +97,6 @@ export default function ArticleDetail({ articleId, onBack }: ArticleDetailProps)
           </div>
         )}
 
-        <div style={{ borderTop: '1px solid #1a2234', paddingTop: 20, color: '#64748b', lineHeight: 1.8 }}>
-          <p style={{ margin: 0 }}>
-            Este artículo está ahora abierto dentro del portfolio para que puedas leerlo sin dejar la experiencia de navegación.
-          </p>
-        </div>
       </div>
     </div>
   );
