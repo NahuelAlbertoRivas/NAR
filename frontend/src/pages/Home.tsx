@@ -19,24 +19,14 @@ interface HomeProps {
 
 const metrics = [
   {
-    label: "Proyectos entregados",
-    value: "15+",
-    icon: <GitBranch size={16} />,
-  },
-  {
     label: "Tecnologías dominadas",
-    value: "18",
+    value: "12+",
     icon: <Cpu size={16} />,
   },
   {
     label: "Años de experiencia",
-    value: "5+",
+    value: "3+",
     icon: <BarChart3 size={16} />,
-  },
-  {
-    label: "Automatizaciones activas",
-    value: "20+",
-    icon: <Zap size={16} />,
   },
 ];
 
@@ -377,7 +367,7 @@ export default function Home({
             Escribirme
           </button>
           <a
-            href="https://linkedin.com"
+            href="https://github.com/NahuelAlbertoRivas"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -406,7 +396,10 @@ export default function Home({
             <GitFork size={14} />
             GitHub
           </a>
-          <button
+          <a
+            href="https://drive.google.com/uc?export=download&id=1AuMrzBX8qtJBI_D2jCA2UbdzdPVr2SPq"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               display: "flex",
               alignItems: "center",
@@ -418,11 +411,12 @@ export default function Home({
               cursor: "pointer",
               color: "#64748b",
               fontSize: 13,
+              textDecoration: "none",
             }}
           >
             <Download size={14} />
             CV
-          </button>
+          </a>
         </div>
       </section>
     </div>

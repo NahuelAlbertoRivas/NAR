@@ -42,11 +42,26 @@ export class ContentService {
   ];
 
   private readonly fallbackTechStack: TechStackItem[] = [
-    { name: 'Java', category: 'Lenguaje', icon: '☕', level: 95 },
-    { name: 'Python', category: 'Lenguaje', icon: '🐍', level: 90 },
-    { name: 'TypeScript', category: 'Lenguaje', icon: '📘', level: 80 },
-    { name: 'PostgreSQL', category: 'Base de datos', icon: '🐘', level: 88 },
-    { name: 'Redis', category: 'Base de datos', icon: '🔴', level: 80 },
+    { name: 'Java', category: 'Lenguaje', icon: '☕', level: 80 },
+    { name: 'C++/C', category: 'Lenguaje', icon: '𝐂++', level: 80 },
+    { name: 'Python', category: 'Lenguaje', icon: '🐍', level: 60 },
+    { name: 'Prolog', category: 'Lenguaje', icon: '📜', level: 40 },
+    { name: 'Haskell', category: 'Lenguaje', icon: 'λ', level: 40 },
+    { name: 'TypeScript', category: 'Lenguaje', icon: '📘', level: 40 },
+    { name: 'Bash', category: 'Lenguaje', icon: '🔧', level: 40 },
+    { name: 'PowerShell', category: 'Lenguaje', icon: '🖥️', level: 40 },
+    { name: 'SQL Server', category: 'Base de datos', icon: '🗄️', level: 70 },
+    { name: 'MySQL', category: 'Base de datos', icon: '🐬', level: 70 },
+    { name: 'Supabase', category: 'Base de datos', icon: '⚡️', level: 50 },
+    { name: 'MongoDB', category: 'Base de datos', icon: '🍃', level: 50 },
+    { name: 'Redis', category: 'Base de datos', icon: '🔴', level: 50 },
+    { name: 'Git', category: 'DevOps', icon: '🐈‍⬛', level: 65 },
+    { name: 'Docker', category: 'DevOps', icon: '🐳', level: 40 },
+    { name: 'Linux', category: 'DevOps', icon: '🐧', level: 40 },
+    { name: 'Render', category: 'Cloud', icon: '🚀', level: 60 },
+    { name: 'Scikit-learn', category: 'IA', icon: '📚', level: 50 },
+    { name: 'Pandas', category: 'IA', icon: '🐼', level: 50 },
+    { name: 'Postman', category: 'Herramientas', icon: '🧪', level: 50 },
   ];
 
   async getArticles(): Promise<ArticleRecord[]> {
