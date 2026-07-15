@@ -24,7 +24,7 @@ export default function Articles() {
     <div style={{ maxWidth: 1000, margin: '0 auto' }}>
       <div style={{ padding: '40px 0 32px' }}>
         <h1 style={{ margin: '0 0 6px', fontSize: 28, fontWeight: 800, color: '#e8edf5', letterSpacing: '-0.02em' }}>Artículos</h1>
-        <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>Reflexiones técnicas sobre arquitectura, IA y automatización.</p>
+        <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>Reflexiones sobre desarrollo en general.</p>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 1, paddingBottom: 48 }}>

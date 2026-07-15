@@ -37,11 +37,62 @@ async function run() {
       CREATE TABLE IF NOT EXISTS public.projects (
         id text PRIMARY KEY,
         title text NOT NULL,
-        slug text NOT NULL,
+        slug text,
         short_description text,
+        description text,
+        problem text,
+        architecture text,
+        solution text,
+        results text,
+        technologies jsonb,
+        languages jsonb,
+        frameworks jsonb,
+        category text,
+        status text,
+        year integer,
+        featured boolean DEFAULT false,
+        image text,
+        github text,
+        demo text,
+        screenshots jsonb,
+        timeline jsonb,
+        challenges jsonb,
+        metrics jsonb,
+        tags jsonb,
+        read_time integer,
+        date text,
+        url text,
         published boolean DEFAULT false,
         created_at timestamptz DEFAULT now(),
         updated_at timestamptz
+      );
+    `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS public.articles (
+        id text PRIMARY KEY,
+        title text NOT NULL,
+        slug text,
+        short_description text,
+        description text,
+        read_time integer,
+        tags jsonb,
+        date text,
+        url text,
+        image text,
+        featured boolean DEFAULT false,
+        category text,
+        created_at timestamptz DEFAULT now(),
+        updated_at timestamptz
+      );
+    `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS public.tech_stack (
+        name text PRIMARY KEY,
+        category text,
+        icon text,
+        level integer
       );
     `);
 
