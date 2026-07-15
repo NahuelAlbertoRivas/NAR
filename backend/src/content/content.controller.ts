@@ -6,17 +6,17 @@ export class ContentController {
   constructor(@Inject(ContentService) private readonly contentService: ContentService) {}
 
   @Get('articles')
-  getArticles(): ArticleRecord[] {
+  async getArticles(): Promise<ArticleRecord[]> {
     return this.contentService.getArticles();
   }
 
   @Get('articles/:id')
-  getArticleById(@Param('id') id: string): ArticleRecord | null {
+  async getArticleById(@Param('id') id: string): Promise<ArticleRecord | null> {
     return this.contentService.getArticleById(id);
   }
 
   @Get('tech')
-  getTechStack(): TechStackItem[] {
+  async getTechStack(): Promise<TechStackItem[]> {
     return this.contentService.getTechStack();
   }
 }
