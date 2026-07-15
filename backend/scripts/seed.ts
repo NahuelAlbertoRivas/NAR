@@ -1,6 +1,13 @@
 import 'dotenv/config';
+import path from 'path';
+import dotenv from 'dotenv';
 import { Client } from 'pg';
 import { parse } from 'pg-connection-string';
+
+// ensure .env is loaded when running via tsx
+const p = path.resolve(process.cwd(), '.env');
+dotenv.config({ path: p });
+console.log({ HAS_DATABASE_URL: Boolean(process.env.DATABASE_URL), HAS_DIRECT_URL: Boolean(process.env.DIRECT_URL) });
 
 function parseConnection(raw?: string) {
   if (!raw) return null;
@@ -14,19 +21,47 @@ function parseConnection(raw?: string) {
 async function run() {
   const raw = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
   const cfg = parseConnection(raw);
-  if (!cfg) {
-    console.error('No valid DATABASE_URL/DIRECT_URL found in env');
+  if (!raw) {
+    console.error('No DATABASE_URL or DIRECT_URL provided in environment');
     process.exit(1);
   }
 
-  const client = new Client({
-    host: cfg.host,
-    port: Number(cfg.port || 5432),
-    user: cfg.user,
-    password: cfg.password,
-    database: cfg.database,
-    ssl: cfg.ssl === 'true' || cfg.ssl === true ? { rejectUnauthorized: false } : undefined,
-  });
+  let client: Client;
+  if (cfg) {
+    client = new Client({
+      host: cfg.host,
+      port: Number(cfg.port || 5432),
+      user: cfg.user,
+      password: cfg.password,
+      database: cfg.database,
+      ssl: cfg.ssl === 'true' || cfg.ssl === true ? { rejectUnauthorized: false } : undefined,
+    });
+  } else {
+    // fallback to connection string (encode auth)
+    let safeRaw = raw || '';
+    try {
+      const m = safeRaw.match(/^(postgres(?:ql)?:\/\/)(.+)$/i);
+      if (m) {
+        const protocol = m[1];
+        const rest = m[2];
+        const atIndex = rest.lastIndexOf('@');
+        if (atIndex > -1) {
+          const auth = rest.slice(0, atIndex);
+          const host = rest.slice(atIndex + 1);
+          const colonIndex = auth.indexOf(':');
+          if (colonIndex > -1) {
+            const user = auth.slice(0, colonIndex);
+            const pass = auth.slice(colonIndex + 1);
+            const safeAuth = `${encodeURIComponent(user)}:${encodeURIComponent(pass)}`;
+            safeRaw = protocol + safeAuth + '@' + host;
+          }
+        }
+      }
+    } catch (e) {
+      // ignore
+    }
+    client = new Client({ connectionString: safeRaw, ssl: { rejectUnauthorized: false } });
+  }
 
   try {
     await client.connect();
