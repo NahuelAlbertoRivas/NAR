@@ -253,6 +253,31 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
             </div>
 
             <img src={project.screenshots[selectedScreenshotIndex]} alt="Captura ampliada" style={{ width: '100%', maxHeight: '85vh', objectFit: 'contain', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }} />
+
+            {project.screenshots.length > 1 && (
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: 10, marginTop: 14, maxWidth: '100%' }}>
+                {project.screenshots.map((screenshot, index) => (
+                  <button
+                    key={index}
+                    type="button"
+                    onClick={() => openScreenshot(index)}
+                    style={{
+                      width: 76,
+                      height: 48,
+                      padding: 0,
+                      border: index === selectedScreenshotIndex ? '2px solid #38bdf8' : '1px solid rgba(255,255,255,0.16)',
+                      borderRadius: 8,
+                      overflow: 'hidden',
+                      background: '#0f172a',
+                      cursor: 'pointer',
+                      boxShadow: index === selectedScreenshotIndex ? '0 0 0 1px rgba(56,189,248,0.25)' : 'none',
+                    }}
+                  >
+                    <img src={screenshot} alt={`Miniatura ${index + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       )}
