@@ -318,7 +318,7 @@ export default function Home({
               letterSpacing: "-0.02em",
             }}
           >
-            ¿Tienes un proyecto en mente?
+            ¿Tenés algún proyecto en mente?
           </h3>
           <p
             style={{
@@ -328,9 +328,7 @@ export default function Home({
               maxWidth: 480,
             }}
           >
-            Estoy disponible para proyectos freelance,
-            consultoría técnica y oportunidades de colaboración
-            en equipos de producto.
+            Estoy al tanto de todo desafío que se presente.
           </p>
         </div>
         <div
