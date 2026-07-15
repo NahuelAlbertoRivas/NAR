@@ -163,15 +163,15 @@ export default function Contact() {
           <ContactLink
             icon={<Link size={18} />}
             label="LinkedIn"
-            handle="/in/nombre-apellido"
-            url="https://linkedin.com"
+            handle="/in/rivasnahuelalberto"
+            url="https://linkedin.com/in/rivasnahuelalberto"
             color="#0077b5"
           />
           <ContactLink
             icon={<GitFork size={18} />}
             label="GitHub"
-            handle="/nombre-usuario"
-            url="https://github.com"
+            handle="/NahuelAlbertoRivas"
+            url="https://github.com/NahuelAlbertoRivas"
             color="#e8edf5"
           />
           <ContactLink

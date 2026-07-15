@@ -1,46 +1,27 @@
 import { MapPin, Globe, Award } from 'lucide-react';
 
 const skills = [
-  { name: 'Arquitectura de Software', level: 92 },
-  { name: 'Backend Development (Java/Python)', level: 94 },
-  { name: 'Integraciones & APIs', level: 90 },
-  { name: 'Inteligencia Artificial / LLMs', level: 82 },
-  { name: 'Automatización (RPA)', level: 88 },
-  { name: 'DevOps & Cloud', level: 80 },
-  { name: 'Frontend (Angular/React)', level: 75 },
+  { name: 'Backend Development (Java/Python)', level: 80 },
+  { name: 'Integraciones & APIs', level: 60 },
+  { name: 'Inteligencia Artificial / LLMs', level: 50 },
+  { name: 'DevOps & Cloud', level: 60 },
+  { name: 'Frontend (Angular/React)', level: 40 },
 ];
 
 const experience = [
   {
-    role: 'Senior Software Engineer',
-    company: 'TechCorp Solutions',
-    period: '2023 – Presente',
-    description: 'Liderazgo técnico de plataformas de integración empresarial y desarrollo de soluciones de IA para clientes fintech y logística.',
-  },
-  {
-    role: 'Software Engineer',
-    company: 'Digital Innovations Lab',
-    period: '2021 – 2023',
-    description: 'Desarrollo de microservicios en Spring Boot, automatización de procesos con RPA y diseño de pipelines de datos en AWS.',
-  },
-  {
-    role: 'Junior Developer',
-    company: 'Startup Hub',
-    period: '2019 – 2021',
-    description: 'Desarrollo full-stack con Angular y Spring Boot. Primeras incursiones en integración de sistemas y APIs REST.',
-  },
+    role: 'DB Backend Developer',
+    company: 'WonderLab',
+    period: 'Jul. 2023 – Jan. 2025',
+    description: 'Desarrollo de scripts y mantenimiento de servicio cloud.',
+  }
 ];
 
-const certifications = [
-  { name: 'AWS Solutions Architect Associate', issuer: 'Amazon Web Services', year: 2023 },
-  { name: 'Certified Kubernetes Application Developer (CKAD)', issuer: 'Cloud Native Computing Foundation', year: 2024 },
-  { name: 'Professional Scrum Developer (PSD)', issuer: 'Scrum.org', year: 2022 },
-];
+const certifications: Array<{ name: string; issuer: string; year: string }> = [];
 
 const languages = [
   { lang: 'Español', level: 'Nativo', code: '🇪🇸' },
-  { lang: 'Inglés', level: 'Avanzado (C1)', code: '🇺🇸' },
-  { lang: 'Portugués', level: 'Básico (A2)', code: '🇧🇷' },
+  { lang: 'Inglés', level: 'Intermedio (B1)', code: '🇺🇸' }
 ];
 
 export default function About() {
@@ -67,13 +48,13 @@ export default function About() {
                 </div>
               </div>
               <div style={{ padding: '20px 22px' }}>
-                <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 700, color: '#e8edf5', letterSpacing: '-0.01em' }}>Nombre A. Apellido</h2>
-                <p style={{ margin: '0 0 14px', fontSize: 13, color: '#06b6d4', fontWeight: 500 }}>Senior Software Engineer</p>
+                <h2 style={{ margin: '0 0 4px', fontSize: 18, fontWeight: 700, color: '#e8edf5', letterSpacing: '-0.01em' }}>Nahuel Alberto Rivas</h2>
+                <p style={{ margin: '0 0 14px', fontSize: 13, color: '#06b6d4', fontWeight: 500 }}>Jr Developer</p>
 
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 18 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#64748b' }}>
                     <MapPin size={12} color="#475569" />
-                    Colombia · Remoto
+                    Buenos Aires · Argentina
                   </div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, color: '#64748b' }}>
                     <Globe size={12} color="#475569" />
@@ -161,7 +142,7 @@ export default function About() {
             <section style={{ paddingBottom: 48 }}>
               <h2 style={{ margin: '0 0 16px', fontSize: 18, fontWeight: 700, color: '#e8edf5', letterSpacing: '-0.01em' }}>Certificaciones</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                {certifications.map((cert, i) => (
+                {certifications?.map((cert, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 14, background: '#0b0e18', border: '1px solid #1a2234', borderRadius: 10, padding: '14px 18px' }}>
                     <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       <Award size={16} color="#f59e0b" />
