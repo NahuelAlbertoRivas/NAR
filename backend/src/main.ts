@@ -4,11 +4,9 @@ import { RequestMethod } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/http-exception.filter';
 import { env } from './config/env';
-import { ensureDatabaseSchema } from './database/schema';
 
 async function bootstrap() {
-  await ensureDatabaseSchema();
-
+  // Do NOT perform any DB schema initialization here.
   const app = await NestFactory.create(AppModule);
   // Keep API routes under /api/v1 but allow root path '/' to be accessible
   app.setGlobalPrefix('api/v1', {

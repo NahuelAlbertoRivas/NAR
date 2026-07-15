@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "tsx watch src/main.ts",
     "build": "tsc -p tsconfig.build.json",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+
+    "db:init": "tsx scripts/init-db.ts",
+    "db:seed": "tsx scripts/seed.ts",
+    "db:health": "tsx scripts/healthcheck.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.10",
