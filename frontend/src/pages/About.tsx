@@ -100,10 +100,12 @@ export default function About() {
             <section>
               <h1 style={{ margin: '0 0 6px', fontSize: 28, fontWeight: 800, color: '#e8edf5', letterSpacing: '-0.02em' }}>Sobre mí</h1>
               <p style={{ fontSize: 16, color: '#94a3b8', lineHeight: 1.75, margin: '0 0 16px' }}>
-                Soy un Software Engineer con más de 5 años de experiencia construyendo sistemas de alta disponibilidad, plataformas de integración y soluciones con inteligencia artificial para empresas en Latinoamérica y España.
+                Soy estudiante avanzado de Ingeniería en Informática apasionado por el diseño y desarrollo de software, la arquitectura de sistemas y la creación de soluciones tecnológicas que transformen ideas en productos funcionales.
               </p>
               <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.75, margin: 0 }}>
-                Me especializo en conectar el mundo empresarial con tecnología de vanguardia: diseño arquitecturas que escalan, automatizo procesos que consumen tiempo y construyo pipelines de IA que generan valor real. Creo profundamente en el software como herramienta de transformación organizacional.
+                Mi enfoque combina ingeniería, pensamiento crítico y creatividad para resolver problemas complejos mediante software robusto, escalable y mantenible. Me interesa especialmente el desarrollo backend, la automatización de procesos, la inteligencia artificial y las tecnologías emergentes que impulsan la evolución digital de las organizaciones.<br></br>
+                A lo largo de mi recorrido académico y profesional he fortalecido no solo mis habilidades técnicas, sino también mi capacidad para comunicar, colaborar y adaptarme a nuevos desafíos. Disfruto aprender continuamente, explorar nuevas áreas del conocimiento y conectar conceptos de diferentes disciplinas para encontrar soluciones innovadoras.<br></br>
+                Creo en la tecnología como una herramienta para generar impacto real: simplificar procesos, mejorar experiencias y construir sistemas que aporten valor a las personas y organizaciones.
               </p>
             </section>
 

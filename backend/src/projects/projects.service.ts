@@ -4,6 +4,9 @@ import { ProjectRecord } from './project.types';
 
 @Injectable()
 export class ProjectsService {
+  constructor() {
+    console.log('ProjectsService instantiated');
+  }
   private readonly fallbackProjects: ProjectRecord[] = [
     {
       id: '1',
@@ -17,7 +20,7 @@ export class ProjectsService {
 
   async findAll(published?: boolean): Promise<ProjectRecord[]> {
     const fromSupabase = await this.fetchFromSupabase();
-    if (fromSupabase) {
+    if (fromSupabase && fromSupabase.length > 0) {
       const projects = fromSupabase.filter((project) =>
         typeof published === 'boolean' ? project.published === published : true,
       );
@@ -31,7 +34,7 @@ export class ProjectsService {
 
   async findOne(id: string): Promise<ProjectRecord | null> {
     const fromSupabase = await this.fetchFromSupabase();
-    if (fromSupabase) {
+    if (fromSupabase && fromSupabase.length > 0) {
       return fromSupabase.find((project) => project.id === id) ?? null;
     }
 

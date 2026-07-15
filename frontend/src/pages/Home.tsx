@@ -115,7 +115,7 @@ export default function Home({
             maxWidth: 680,
           }}
         >
-          Software Engineer
+          ¡Bienvenida/o!
         </h1>
 
         <p

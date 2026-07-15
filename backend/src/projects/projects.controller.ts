@@ -1,14 +1,20 @@
-import { Controller, Get, Post, Body, Param, Patch, Delete, Query, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Patch, Delete, Query, BadRequestException, Inject } from '@nestjs/common';
 import { ProjectsService } from './projects.service';
 import { ProjectRecord } from './project.types';
 import { CreateProjectDto, UpdateProjectDto } from './project.dto';
 
 @Controller('projects')
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(
+    @Inject(ProjectsService)
+    private readonly projectsService: ProjectsService,
+  ) {
+    console.log('ProjectsController initialized, projectsService=', !!projectsService);
+  }
 
   @Get()
   async findAll(@Query('published') published?: string): Promise<ProjectRecord[]> {
+    console.log('ProjectsController.findAll, service=', this.projectsService);
     return this.projectsService.findAll(published === 'true');
   }
 
