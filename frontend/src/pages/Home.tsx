@@ -153,39 +153,28 @@ export default function Home({
             Ver proyectos
             <ArrowRight size={15} />
           </button>
-          <button
+          
+          <a
+            href="https://drive.google.com/uc?export=download&id=1AuMrzBX8qtJBI_D2jCA2UbdzdPVr2SPq"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
               display: "flex",
               alignItems: "center",
-              gap: 8,
+              gap: 6,
               background: "transparent",
               border: "1px solid #1a2234",
-              borderRadius: 10,
-              padding: "11px 22px",
+              borderRadius: 9,
+              padding: "10px 18px",
               cursor: "pointer",
-              color: "#94a3b8",
-              fontSize: 14,
-              fontWeight: 500,
-              transition: "all 0.15s",
-            }}
-            onMouseEnter={(e) => {
-              (
-                e.currentTarget as HTMLElement
-              ).style.borderColor = "#334155";
-              (e.currentTarget as HTMLElement).style.color =
-                "#e8edf5";
-            }}
-            onMouseLeave={(e) => {
-              (
-                e.currentTarget as HTMLElement
-              ).style.borderColor = "#1a2234";
-              (e.currentTarget as HTMLElement).style.color =
-                "#94a3b8";
+              color: "#64748b",
+              fontSize: 13,
+              textDecoration: "none",
             }}
           >
             <Download size={14} />
             Descargar CV
-          </button>
+          </a>
         </div>
       </section>
 
@@ -364,7 +353,7 @@ export default function Home({
               fontWeight: 600,
             }}
           >
-            Escribirme
+            Escribime
           </button>
           <a
             href="https://github.com/NahuelAlbertoRivas"
@@ -395,27 +384,6 @@ export default function Home({
           >
             <GitFork size={14} />
             GitHub
-          </a>
-          <a
-            href="https://drive.google.com/uc?export=download&id=1AuMrzBX8qtJBI_D2jCA2UbdzdPVr2SPq"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 6,
-              background: "transparent",
-              border: "1px solid #1a2234",
-              borderRadius: 9,
-              padding: "10px 18px",
-              cursor: "pointer",
-              color: "#64748b",
-              fontSize: 13,
-              textDecoration: "none",
-            }}
-          >
-            <Download size={14} />
-            CV
           </a>
         </div>
       </section>
