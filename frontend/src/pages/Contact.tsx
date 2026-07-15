@@ -1,15 +1,71 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { GitFork, Link, Mail, Download, Send, CheckCircle2 } from 'lucide-react';
 
+interface ContactFormState {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}
+
+const initialForm: ContactFormState = { name: '', email: '', subject: '', message: '' };
+
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState<ContactFormState>(initialForm);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [error, setError] = useState('');
+  const [messagesCount, setMessagesCount] = useState(0);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem('portfolio-contact-messages');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        setMessagesCount(Array.isArray(parsed) ? parsed.length : 0);
+      }
+    } catch {
+      setMessagesCount(0);
+    }
+  }, []);
+
+  const isValid = useMemo(() => {
+    return form.name.trim() && form.email.trim() && form.subject.trim() && form.message.trim();
+  }, [form]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isValid) {
+      setError('Completa todos los campos para enviar el mensaje.');
+      return;
+    }
+
     setSending(true);
-    setTimeout(() => { setSending(false); setSent(true); }, 1500);
+    setError('');
+
+    const messagePayload = {
+      ...form,
+      submittedAt: new Date().toISOString(),
+      id: `msg-${Date.now()}`,
+    };
+
+    try {
+      const stored = window.localStorage.getItem('portfolio-contact-messages');
+      const previous = stored ? JSON.parse(stored) : [];
+      const next = Array.isArray(previous) ? [...previous, messagePayload] : [messagePayload];
+      window.localStorage.setItem('portfolio-contact-messages', JSON.stringify(next));
+      setMessagesCount(next.length);
+    } catch {
+      setError('No se pudo guardar el mensaje localmente. Inténtalo de nuevo.');
+      setSending(false);
+      return;
+    }
+
+    window.setTimeout(() => {
+      setSending(false);
+      setSent(true);
+      setForm(initialForm);
+    }, 900);
   };
 
   return (
@@ -27,9 +83,9 @@ export default function Contact() {
               <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(34,197,94,0.1)', border: '1px solid rgba(34,197,94,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <CheckCircle2 size={24} color="#22c55e" />
               </div>
-              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#e8edf5' }}>¡Mensaje enviado!</h3>
-              <p style={{ margin: 0, fontSize: 14, color: '#64748b', textAlign: 'center' }}>Te respondo dentro de las próximas 24–48 horas. ¡Gracias por escribirme!</p>
-              <button onClick={() => { setSent(false); setForm({ name: '', email: '', subject: '', message: '' }); }} style={{ marginTop: 8, background: 'none', border: '1px solid #1a2234', borderRadius: 8, padding: '8px 20px', cursor: 'pointer', color: '#64748b', fontSize: 13 }}>
+              <h3 style={{ margin: 0, fontSize: 18, fontWeight: 700, color: '#e8edf5' }}>¡Mensaje guardado!</h3>
+              <p style={{ margin: 0, fontSize: 14, color: '#64748b', textAlign: 'center' }}>Tu mensaje quedó registrado localmente y queda listo para revisión. Se han acumulado {messagesCount} mensaje{messagesCount === 1 ? '' : 's'} en esta sesión.</p>
+              <button onClick={() => { setSent(false); setError(''); }} style={{ marginTop: 8, background: 'none', border: '1px solid #1a2234', borderRadius: 8, padding: '8px 20px', cursor: 'pointer', color: '#64748b', fontSize: 13 }}>
                 Enviar otro mensaje
               </button>
             </div>
@@ -40,6 +96,11 @@ export default function Contact() {
                 <FormField label="Email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} placeholder="correo@ejemplo.com" required />
               </div>
               <FormField label="Asunto" type="text" value={form.subject} onChange={(v) => setForm({ ...form, subject: v })} placeholder="¿De qué quieres hablar?" required />
+              {error ? (
+                <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '10px 12px', color: '#fca5a5', fontSize: 12 }}>
+                  {error}
+                </div>
+              ) : null}
               <div>
                 <label style={{ display: 'block', fontSize: 12, fontWeight: 500, color: '#94a3b8', marginBottom: 6 }}>Mensaje</label>
                 <textarea
@@ -71,7 +132,7 @@ export default function Contact() {
                 }}
               >
                 <Send size={14} />
-                {sending ? 'Enviando...' : 'Enviar mensaje'}
+                {sending ? 'Guardando...' : 'Enviar mensaje'}
               </button>
             </form>
           )}
