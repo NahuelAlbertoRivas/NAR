@@ -1,0 +1,12 @@
+services:
+  - type: static
+    name: portfolio-frontend
+    env: node
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
+
+  - type: web
+    name: portfolio-backend
+    env: node
+    buildCommand: cd backend && npm install && npm run build
+    startCommand: cd backend && npm start
