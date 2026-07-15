@@ -1,5 +1,6 @@
 import { Client } from 'pg';
 import { env } from '../config/env';
+import { lookup as dnsLookup } from 'dns/promises';
 
 function parseConnectionDetails(rawUrl?: string): { host: string; port: number; database: string; user: string; password: string; ssl: boolean | { rejectUnauthorized: boolean } } | null {
   if (!rawUrl) {
@@ -47,9 +48,22 @@ export async function ensureDatabaseSchema(): Promise<void> {
     return;
   }
 
-  const connectionDetails = parseConnectionDetails(process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? '');
+  let connectionDetails = parseConnectionDetails(process.env.DIRECT_URL ?? process.env.DATABASE_URL ?? '');
   if (!connectionDetails) {
     return;
+  }
+
+  // Prefer IPv4 resolution to avoid ENETUNREACH on environments without IPv6.
+  try {
+    // Only attempt lookup when host looks like a DNS name (not literal IP)
+    if (!/^\[?[:0-9a-fA-F]+\]?$/.test(connectionDetails.host)) {
+      const lookupResult = await dnsLookup(connectionDetails.host, { family: 4 });
+      if (lookupResult && lookupResult.address) {
+        connectionDetails = { ...connectionDetails, host: lookupResult.address };
+      }
+    }
+  } catch (err) {
+    // If DNS lookup fails, continue with original host; schema init will skip on connection errors.
   }
 
   const client = new Client(connectionDetails);
