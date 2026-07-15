@@ -117,7 +117,7 @@ export default function App() {
           justifyContent: 'space-between',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 12, color: '#334155' }}>© 2025 NAR Development</span>
+            <span style={{ fontSize: 12, color: '#334155' }}>© 2026 NAR Development</span>
             <span style={{ fontSize: 12, color: '#1e293b' }}>·</span>
             <span style={{ fontSize: 11, fontFamily: 'JetBrains Mono, monospace', color: '#1e293b', background: '#0b0e18', border: '1px solid #1a2234', borderRadius: 4, padding: '2px 6px' }}>v1.0.0</span>
           </div>

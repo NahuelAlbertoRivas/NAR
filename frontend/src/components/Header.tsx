@@ -45,12 +45,45 @@ export default function Header({ currentPage, onNavigate, globalSearch, onGlobal
       {/* Logo */}
       <button
         onClick={() => onNavigate('home')}
-        style={{ display: 'flex', alignItems: 'center', gap: 10, background: 'none', border: 'none', cursor: 'pointer', padding: '0 8px 0 0', flexShrink: 0 }}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          padding: '0 8px 0 0',
+          flexShrink: 0
+        }}
       >
-        <NARLogo size={30} />
-        <span style={{ fontWeight: 600, fontSize: 14, color: '#e8edf5', letterSpacing: '-0.01em' }}>
+        <img
+          src="https://lbsmiosdwybqczdyeuix.supabase.co/storage/v1/object/sign/recursos/nar_master_transparent.svg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9jMWYyMTJhMC0yZmIzLTQ5MDgtOWU3Yy04NjA0YzhiYjgwMmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWN1cnNvcy9uYXJfbWFzdGVyX3RyYW5zcGFyZW50LnN2ZyIsInNjb3BlIjoiZG93bmxvYWQiLCJpYXQiOjE3ODQxMjQ2MjQsImV4cCI6MzM2MDkyNDYyNH0.z1lOHvzdT6Bk7iSo0TQHk7zRAuP2UBos1tOHKCGxz2Q"
+          alt="NAR Logo"
+          style={{
+            width: 30,
+            height: 30,
+            objectFit: 'contain',
+          }}
+        />
+
+        <span
+          style={{
+            fontWeight: 600,
+            fontSize: 14,
+            color: '#e8edf5',
+            letterSpacing: '-0.01em'
+          }}
+        >
           NAR
-          <span style={{ color: '#64748b', fontWeight: 400, marginLeft: 4 }}>/ Development</span>
+          <span
+            style={{
+              color: '#64748b',
+              fontWeight: 400,
+              marginLeft: 4
+            }}
+          >
+            / Development
+          </span>
         </span>
       </button>
 
