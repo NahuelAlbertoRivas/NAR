@@ -170,22 +170,6 @@ export default function Header({ currentPage, onNavigate, globalSearch, onGlobal
           <Mail size={13} />
           Contacto
         </button>
-
-        <button
-          style={{
-            display: 'flex', alignItems: 'center', gap: 6,
-            background: 'transparent',
-            border: '1px solid #1a2234',
-            borderRadius: 8, padding: '6px 12px',
-            cursor: 'pointer', color: '#64748b', fontSize: 13,
-            transition: 'all 0.15s',
-          }}
-          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; (e.currentTarget as HTMLElement).style.color = '#e8edf5'; }}
-          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = '#1a2234'; (e.currentTarget as HTMLElement).style.color = '#64748b'; }}
-        >
-          <Download size={13} />
-          CV
-        </button>
       </div>
     </header>
   );

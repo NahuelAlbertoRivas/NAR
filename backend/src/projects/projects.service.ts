@@ -55,18 +55,39 @@ export class ProjectsService {
 
     if (supabase) {
       try {
-        const { data, error } = await supabase
-          .from('projects')
-          .insert({
-            id: project.id,
-            title: project.title,
-            slug: project.slug,
-            short_description: project.shortDescription,
-            published: project.published,
-            created_at: project.createdAt,
-          })
-          .select()
-          .single();
+        const payload: Record<string, unknown> = {
+          id: project.id,
+          title: project.title,
+          slug: project.slug,
+          short_description: project.shortDescription,
+          description: project.description,
+          problem: project.problem,
+          architecture: project.architecture,
+          solution: project.solution,
+          results: project.results,
+          technologies: project.technologies,
+          languages: project.languages,
+          frameworks: project.frameworks,
+          category: project.category,
+          status: project.status,
+          year: project.year,
+          featured: project.featured,
+          image: project.image,
+          github: project.github,
+          demo: project.demo,
+          screenshots: project.screenshots,
+          timeline: project.timeline,
+          challenges: project.challenges,
+          metrics: project.metrics,
+          tags: project.tags,
+          read_time: project.readTime,
+          date: project.date,
+          url: project.url,
+          published: project.published,
+          created_at: project.createdAt,
+        };
+
+        const { data, error } = await supabase.from('projects').insert(payload).select().single();
 
         if (!error && data) {
           return this.toProjectRecord(data);
@@ -88,6 +109,29 @@ export class ProjectsService {
         if (body.slug !== undefined) updatePayload.slug = body.slug;
         if (body.shortDescription !== undefined) updatePayload.short_description = body.shortDescription;
         if (body.published !== undefined) updatePayload.published = body.published;
+        if (body.description !== undefined) updatePayload.description = body.description;
+        if (body.problem !== undefined) updatePayload.problem = body.problem;
+        if (body.architecture !== undefined) updatePayload.architecture = body.architecture;
+        if (body.solution !== undefined) updatePayload.solution = body.solution;
+        if (body.results !== undefined) updatePayload.results = body.results;
+        if (body.technologies !== undefined) updatePayload.technologies = body.technologies;
+        if (body.languages !== undefined) updatePayload.languages = body.languages;
+        if (body.frameworks !== undefined) updatePayload.frameworks = body.frameworks;
+        if (body.category !== undefined) updatePayload.category = body.category;
+        if (body.status !== undefined) updatePayload.status = body.status;
+        if (body.year !== undefined) updatePayload.year = body.year;
+        if (body.featured !== undefined) updatePayload.featured = body.featured;
+        if (body.image !== undefined) updatePayload.image = body.image;
+        if (body.github !== undefined) updatePayload.github = body.github;
+        if (body.demo !== undefined) updatePayload.demo = body.demo;
+        if (body.screenshots !== undefined) updatePayload.screenshots = body.screenshots;
+        if (body.timeline !== undefined) updatePayload.timeline = body.timeline;
+        if (body.challenges !== undefined) updatePayload.challenges = body.challenges;
+        if (body.metrics !== undefined) updatePayload.metrics = body.metrics;
+        if (body.tags !== undefined) updatePayload.tags = body.tags;
+        if (body.readTime !== undefined) updatePayload.read_time = body.readTime;
+        if (body.date !== undefined) updatePayload.date = body.date;
+        if (body.url !== undefined) updatePayload.url = body.url;
 
         const { data, error } = await supabase.from('projects').update(updatePayload).eq('id', id).select().single();
         if (!error && data) {
@@ -149,8 +193,31 @@ export class ProjectsService {
     return {
       id: String(record.id ?? record.project_id ?? '0'),
       title: String(record.title ?? ''),
-      slug: String(record.slug ?? ''),
+      slug: record.slug ? String(record.slug) : undefined,
       shortDescription: String(record.short_description ?? record.shortDescription ?? ''),
+      description: record.description ? String(record.description) : undefined,
+      problem: record.problem ? String(record.problem) : undefined,
+      architecture: record.architecture ? String(record.architecture) : undefined,
+      solution: record.solution ? String(record.solution) : undefined,
+      results: record.results ? String(record.results) : undefined,
+      technologies: Array.isArray(record.technologies) ? (record.technologies as string[]) : undefined,
+      languages: Array.isArray(record.languages) ? (record.languages as string[]) : undefined,
+      frameworks: Array.isArray(record.frameworks) ? (record.frameworks as string[]) : undefined,
+      category: record.category ? String(record.category) : undefined,
+      status: record.status ? String(record.status) : undefined,
+      year: record.year ? Number(record.year) : undefined,
+      featured: record.featured ? Boolean(record.featured) : undefined,
+      image: record.image ? String(record.image) : undefined,
+      github: record.github ? String(record.github) : undefined,
+      demo: record.demo ? String(record.demo) : undefined,
+      screenshots: Array.isArray(record.screenshots) ? (record.screenshots as string[]) : undefined,
+      timeline: record.timeline ?? undefined,
+      challenges: Array.isArray(record.challenges) ? (record.challenges as string[]) : undefined,
+      metrics: record.metrics ?? undefined,
+      tags: Array.isArray(record.tags) ? (record.tags as string[]) : undefined,
+      readTime: record.read_time ? Number(record.read_time) : undefined,
+      date: record.date ? String(record.date) : undefined,
+      url: record.url ? String(record.url) : undefined,
       published: Boolean(record.published),
       createdAt: String(record.created_at ?? record.createdAt ?? new Date().toISOString()),
       updatedAt: record.updated_at ? String(record.updated_at) : undefined,

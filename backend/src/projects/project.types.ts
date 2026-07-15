@@ -1,9 +1,32 @@
 export interface ProjectRecord {
   id: string;
   title: string;
-  slug: string;
-  shortDescription: string;
-  published: boolean;
+  slug?: string;
+  shortDescription?: string;
+  description?: string;
+  problem?: string;
+  architecture?: string;
+  solution?: string;
+  results?: string;
+  technologies?: string[] | unknown;
+  languages?: string[] | unknown;
+  frameworks?: string[] | unknown;
+  category?: string;
+  status?: string;
+  year?: number;
+  featured?: boolean;
+  image?: string;
+  github?: string;
+  demo?: string;
+  screenshots?: string[] | unknown;
+  timeline?: unknown;
+  challenges?: string[] | unknown;
+  metrics?: unknown;
+  tags?: string[] | unknown;
+  readTime?: number;
+  date?: string;
+  url?: string;
+  published?: boolean;
   createdAt: string;
   updatedAt?: string;
 }

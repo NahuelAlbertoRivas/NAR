@@ -80,15 +80,19 @@ export default function Admin() {
   }
 
   async function editProject(p: any) {
-    const title = prompt('Title', p.title) || p.title;
-    const slug = prompt('Slug', p.slug) || p.slug;
-    const shortDescription = prompt('Short description', p.shortDescription || '') || p.shortDescription;
-    const res = await fetch(`${API_BASE}/projects/${p.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...authHeaders() },
-      body: JSON.stringify({ title, slug, shortDescription }),
-    });
-    if (res.ok) await fetchProjects(); else alert('Failed to update');
+    const json = prompt('Edit full project JSON', JSON.stringify(p, null, 2));
+    if (!json) return;
+    try {
+      const parsed = JSON.parse(json);
+      const res = await fetch(`${API_BASE}/projects/${p.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify(parsed),
+      });
+      if (res.ok) await fetchProjects(); else alert('Failed to update');
+    } catch (e: any) {
+      alert('Invalid JSON');
+    }
   }
 
   async function deleteProject(id: string) {
@@ -98,25 +102,36 @@ export default function Admin() {
   }
 
   async function createArticle() {
-    const title = prompt('Title') || 'Nuevo artículo';
-    const summary = prompt('Summary') || '';
+    const maybe = prompt('Create article: enter JSON object or just a title');
+    if (!maybe) return;
+    let body: any;
+    try {
+      body = JSON.parse(maybe);
+    } catch {
+      body = { title: maybe, summary: '' };
+    }
     const res = await fetch(`${API_BASE}/content/articles`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...authHeaders() },
-      body: JSON.stringify({ title, summary }),
+      body: JSON.stringify(body),
     });
     if (res.ok) await fetchArticles(); else alert('Failed to create article');
   }
 
   async function editArticle(a: any) {
-    const title = prompt('Title', a.title) || a.title;
-    const summary = prompt('Summary', a.summary || '') || a.summary;
-    const res = await fetch(`${API_BASE}/content/articles/${a.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', ...authHeaders() },
-      body: JSON.stringify({ title, summary }),
-    });
-    if (res.ok) await fetchArticles(); else alert('Failed to update article');
+    const json = prompt('Edit full article JSON', JSON.stringify(a, null, 2));
+    if (!json) return;
+    try {
+      const parsed = JSON.parse(json);
+      const res = await fetch(`${API_BASE}/content/articles/${a.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', ...authHeaders() },
+        body: JSON.stringify(parsed),
+      });
+      if (res.ok) await fetchArticles(); else alert('Failed to update article');
+    } catch (e: any) {
+      alert('Invalid JSON');
+    }
   }
 
   async function deleteArticle(id: string) {

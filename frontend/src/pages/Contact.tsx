@@ -92,7 +92,7 @@ export default function Contact() {
     <div style={{ maxWidth: 880, margin: '0 auto' }}>
       <div style={{ padding: '40px 0 40px' }}>
         <h1 style={{ margin: '0 0 6px', fontSize: 28, fontWeight: 800, color: '#e8edf5', letterSpacing: '-0.02em' }}>Contacto</h1>
-        <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>Hablemos de tu próximo proyecto o simplemente saluda.</p>
+        <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>Hablemos de un próximo proyecto, o lo que tengas en mente</p>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 32, paddingBottom: 64 }}>
@@ -115,7 +115,7 @@ export default function Contact() {
                 <FormField label="Nombre" type="text" value={form.name} onChange={(v) => setForm({ ...form, name: v })} placeholder="Tu nombre" required />
                 <FormField label="Email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} placeholder="correo@ejemplo.com" required />
               </div>
-              <FormField label="Asunto" type="text" value={form.subject} onChange={(v) => setForm({ ...form, subject: v })} placeholder="¿De qué quieres hablar?" required />
+              <FormField label="Asunto" type="text" value={form.subject} onChange={(v) => setForm({ ...form, subject: v })} placeholder="¿De qué se trata?" required />
               {error ? (
                 <div style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 8, padding: '10px 12px', color: '#fca5a5', fontSize: 12 }}>
                   {error}
@@ -126,7 +126,7 @@ export default function Contact() {
                 <textarea
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="Cuéntame sobre tu proyecto, idea o consulta..."
+                  placeholder="Contame sobre tu proyecto, idea o consulta..."
                   required
                   rows={6}
                   style={{
@@ -244,7 +244,7 @@ export default function Contact() {
               <span style={{ fontSize: 13, fontWeight: 600, color: '#e8edf5' }}>Disponible ahora</span>
             </div>
             <p style={{ margin: 0, fontSize: 12, color: '#64748b', lineHeight: 1.6 }}>
-              Abierto a proyectos freelance, consultoría técnica y oportunidades de empleo remoto full-time o part-time.
+              Abierto a proyectos freelance y oportunidades de empleo remoto full-time o part-time.
             </p>
           </div>
         </div>
