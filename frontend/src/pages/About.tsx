@@ -39,7 +39,7 @@ export default function About() {
                 borderBottom: '1px solid #1a2234',
               }}>
                 <div style={{
-                  width: 100, height: 100, borderRadius: '50%',
+                  width: 200, height: 200, borderRadius: '50%',
                   background: 'linear-gradient(135deg, #2563eb, #06b6d4)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
                   fontSize: 36, fontWeight: 800, color: '#fff', letterSpacing: '-0.02em',
