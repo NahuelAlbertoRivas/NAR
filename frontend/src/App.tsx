@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { Page } from './types';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
@@ -11,7 +11,7 @@ import About from './pages/About';
 import Tech from './pages/Tech';
 import Contact from './pages/Contact';
 import Admin from './pages/Admin';
-import { useEffect } from 'react';
+import SplashScreen from './components/SplashScreen';
 
 const SIDEBAR_WIDTH = 240;
 const HEADER_HEIGHT = 56;
@@ -22,6 +22,10 @@ export default function App() {
   const [articleDetailId, setArticleDetailId] = useState<string | null>(null);
   const [globalSearch, setGlobalSearch] = useState('');
   const [sidebarSearch, setSidebarSearch] = useState('');
+  const [isBooting, setIsBooting] = useState(true);
+  const [isBackendPending, setIsBackendPending] = useState(false);
+  const pendingFetchesRef = useRef(0);
+  const pendingTimerRef = useRef<number | null>(null);
   const [filters, setFilters] = useState({
     technology: '',
     language: '',
@@ -45,7 +49,47 @@ export default function App() {
   };
 
   useEffect(() => {
-    // On mount, sync page from URL path (support direct /admin access)
+    const splashTimeout = window.setTimeout(() => setIsBooting(false), 800);
+    const originalFetch = window.fetch.bind(window);
+
+    const clearPendingTimer = () => {
+      if (pendingTimerRef.current !== null) {
+        window.clearTimeout(pendingTimerRef.current);
+        pendingTimerRef.current = null;
+      }
+    };
+
+    const beginPendingRequest = () => {
+      pendingFetchesRef.current += 1;
+      if (pendingFetchesRef.current === 1) {
+        clearPendingTimer();
+        pendingTimerRef.current = window.setTimeout(() => setIsBackendPending(true), 2000);
+      }
+    };
+
+    const finishPendingRequest = () => {
+      pendingFetchesRef.current = Math.max(0, pendingFetchesRef.current - 1);
+      if (pendingFetchesRef.current === 0) {
+        clearPendingTimer();
+        setIsBackendPending(false);
+      }
+    };
+
+    const wrappedFetch: typeof window.fetch = (input, init) => {
+      beginPendingRequest();
+      return originalFetch(input as RequestInfo | URL, init)
+        .then((response) => {
+          finishPendingRequest();
+          return response;
+        })
+        .catch((error) => {
+          finishPendingRequest();
+          throw error;
+        });
+    };
+
+    window.fetch = wrappedFetch;
+
     try {
       const p = window.location.pathname.replace(/^\//, '');
       if (!p) return;
@@ -54,6 +98,12 @@ export default function App() {
     } catch (e) {
       // ignore
     }
+
+    return () => {
+      window.clearTimeout(splashTimeout);
+      clearPendingTimer();
+      window.fetch = originalFetch;
+    };
   }, []);
 
   const viewProject = (id: string) => {
@@ -91,6 +141,7 @@ export default function App() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#060810' }}>
+      <SplashScreen visible={isBooting || isBackendPending} />
       <Header
         currentPage={currentPage}
         onNavigate={navigate}
