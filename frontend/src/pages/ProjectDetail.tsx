@@ -189,8 +189,8 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
 
           {/* Video demo */}
           <Section title="Demo en video">
-            {project.videoUrl ? (() => {
-              const videoDetails = getVideoEmbedDetails(project.videoUrl);
+            {project.demo ? (() => {
+              const videoDetails = getVideoEmbedDetails(project.demo);
 
               if (videoDetails?.kind === 'iframe') {
                 return (
