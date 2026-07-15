@@ -79,10 +79,9 @@ export class ProjectsService {
           timeline: project.timeline,
           challenges: project.challenges,
           metrics: project.metrics,
-          read_time: project.readTime,
-          url: project.url,
           published: project.published,
           created_at: project.createdAt,
+          updated_at: project.updatedAt ?? project.createdAt,
         };
 
         const { data, error } = await supabase.from('projects').insert(payload).select().single();
@@ -132,8 +131,8 @@ export class ProjectsService {
         if (body.timeline !== undefined) updatePayload.timeline = body.timeline;
         if (body.challenges !== undefined) updatePayload.challenges = body.challenges;
         if (body.metrics !== undefined) updatePayload.metrics = body.metrics;
-        if (body.readTime !== undefined) updatePayload.read_time = body.readTime;
-        if (body.url !== undefined) updatePayload.url = body.url;
+        if (body.updatedAt !== undefined) updatePayload.updated_at = body.updatedAt;
+        else updatePayload.updated_at = new Date().toISOString();
 
         const { data, error } = await supabase.from('projects').update(updatePayload).eq('id', id).select().single();
         if (error) {
