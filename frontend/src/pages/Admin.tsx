@@ -23,7 +23,7 @@ interface ProjectRecord {
   id: string;
   title: string;
   slug?: string;
-  short_description?: string;
+  shortDescription?: string;
   description?: string;
   problem?: string;
   architecture?: string;
@@ -44,7 +44,7 @@ interface ProjectRecord {
   challenges?: string[];
   metrics?: Array<{ label: string; value: string }>;
   tags?: string[];
-  read_time?: number;
+  readTime?: number;
   date?: string;
   url?: string;
   published?: boolean;
@@ -76,7 +76,7 @@ const defaultProjectForm = {
   id: '',
   title: '',
   slug: '',
-  short_description: '',
+  shortDescription: '',
   description: '',
   problem: '',
   architecture: '',
@@ -97,7 +97,7 @@ const defaultProjectForm = {
   challenges: '',
   metrics: '[]',
   tags: '',
-  read_time: 0,
+  readTime: 0,
   date: new Date().toISOString().slice(0, 10),
   url: '',
   published: false,
@@ -304,7 +304,7 @@ export default function Admin() {
       type === 'project-edit' && project
         ? {
             ...project,
-            short_description: project.short_description ?? '',
+            shortDescription: project.shortDescription ?? '',
             technologies: (project.technologies ?? []).join(', '),
             languages: (project.languages ?? []).join(', '),
             frameworks: (project.frameworks ?? []).join(', '),
@@ -314,7 +314,7 @@ export default function Admin() {
             timeline: JSON.stringify(project.timeline ?? [], null, 2),
             metrics: JSON.stringify(project.metrics ?? [], null, 2),
             featured: Boolean(project.featured),
-            read_time: project.read_time ?? 0,
+            readTime: project.readTime ?? 0,
             published: Boolean(project.published),
           }
         : defaultProjectForm,
@@ -361,7 +361,7 @@ export default function Admin() {
     const payload: any = {
       title: formState.title,
       slug: formState.slug,
-      short_description: formState.short_description,
+      shortDescription: formState.shortDescription,
       description: formState.description,
       problem: formState.problem,
       architecture: formState.architecture,
@@ -382,7 +382,7 @@ export default function Admin() {
       challenges: parseList(String(formState.challenges ?? '')),
       metrics: parseJson<Array<{ label: string; value: string }>>(String(formState.metrics || '[]'), []),
       tags: parseList(String(formState.tags ?? '')),
-      read_time: Number(formState.read_time || 0) || undefined,
+      readTime: Number(formState.readTime || 0) || undefined,
       date: formState.date,
       url: formState.url,
       published: Boolean(formState.published),
@@ -411,7 +411,7 @@ export default function Admin() {
       slug: formState.slug,
       summary: formState.summary,
       description: formState.description,
-      read_time: Number(formState.readTime || 0) || undefined,
+      readTime: Number(formState.readTime || 0) || undefined,
       tags: parseList(String(formState.tags ?? '')),
       date: formState.date,
       url: formState.url,
@@ -653,9 +653,9 @@ export default function Admin() {
             <p>¿Confirmas eliminar el proyecto <strong>{modalData?.title}</strong>?</p>
           ) : (
             <div style={{ display: 'grid', gap: 12 }}>
-              {['title', 'slug', 'short_description', 'description', 'problem', 'architecture', 'solution', 'results'].map((field) => (
+              {['title', 'slug', 'shortDescription', 'description', 'problem', 'architecture', 'solution', 'results'].map((field) => (
                 <label key={field} style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-                  <span>{field.replace(/_/g, ' ')}</span>
+                  <span>{field.replace(/([A-Z])/g, ' $1').replace(/^./, (c) => c.toUpperCase())}</span>
                   <input
                     name={field}
                     value={formState[field] ?? ''}
@@ -722,7 +722,7 @@ export default function Admin() {
               </label>
               <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <span>Read time</span>
-                <input type="number" name="read_time" value={formState.read_time ?? 0} onChange={handleInputChange} style={inputStyle} />
+                <input type="number" name="readTime" value={formState.readTime ?? 0} onChange={handleInputChange} style={inputStyle} />
               </label>
               <label style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 <span>Date</span>
