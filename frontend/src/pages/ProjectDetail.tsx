@@ -1,4 +1,4 @@
-import { ArrowLeft, GitFork, ExternalLink, Clock, CheckCircle2, Play } from 'lucide-react';
+import { ArrowLeft, GitFork, ExternalLink, Clock, CheckCircle2, Play, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { type Project } from '../data';
 import { getProjectById } from '../services/portfolioApi';
@@ -10,6 +10,7 @@ interface ProjectDetailProps {
 
 export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps) {
   const [project, setProject] = useState<Project | null>(null);
+  const [selectedScreenshotIndex, setSelectedScreenshotIndex] = useState<number | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -26,6 +27,19 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
   }, [projectId]);
 
   if (!project) return null;
+
+  const openScreenshot = (index: number) => setSelectedScreenshotIndex(index);
+  const closeScreenshot = () => setSelectedScreenshotIndex(null);
+  const goToPreviousScreenshot = () => {
+    if (project && selectedScreenshotIndex !== null && selectedScreenshotIndex > 0) {
+      setSelectedScreenshotIndex(selectedScreenshotIndex - 1);
+    }
+  };
+  const goToNextScreenshot = () => {
+    if (project && selectedScreenshotIndex !== null && selectedScreenshotIndex < project.screenshots.length - 1) {
+      setSelectedScreenshotIndex(selectedScreenshotIndex + 1);
+    }
+  };
 
   const statusConfig = {
     completed: { label: 'Finalizado', color: '#22c55e', bg: 'rgba(34,197,94,0.1)' },
@@ -185,15 +199,63 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
               <h3 style={{ margin: '0 0 12px', fontSize: 12, fontWeight: 600, color: '#64748b', letterSpacing: '0.08em', textTransform: 'uppercase' }}>Capturas</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                 {project.screenshots.map((s, i) => (
-                  <div key={i} style={{ borderRadius: 8, overflow: 'hidden', height: 120, background: '#0f1420' }}>
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => openScreenshot(i)}
+                    style={{ border: 'none', padding: 0, background: 'none', width: '100%', cursor: 'pointer', borderRadius: 8, overflow: 'hidden', height: 120 }}
+                  >
                     <img src={s} alt={`Captura ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
           )}
         </div>
       </div>
+
+      {selectedScreenshotIndex !== null && project.screenshots[selectedScreenshotIndex] && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={closeScreenshot}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(2,6,23,0.92)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: 24 }}
+        >
+          <div onClick={(event) => event.stopPropagation()} style={{ position: 'relative', width: 'min(100%, 1100px)', maxHeight: '90vh', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <button
+              type="button"
+              onClick={closeScreenshot}
+              style={{ position: 'absolute', top: -12, right: -12, width: 40, height: 40, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.16)', background: '#0f172a', color: '#e2e8f0', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 12px 30px rgba(0,0,0,0.3)' }}
+            >
+              <X size={18} />
+            </button>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <button
+                type="button"
+                onClick={goToPreviousScreenshot}
+                disabled={selectedScreenshotIndex === 0}
+                style={{ width: 40, height: 40, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.16)', background: selectedScreenshotIndex === 0 ? 'rgba(255,255,255,0.08)' : '#0f172a', color: '#e2e8f0', cursor: selectedScreenshotIndex === 0 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <ChevronLeft size={18} />
+              </button>
+              <span style={{ fontSize: 12, color: '#cbd5e1', fontFamily: 'JetBrains Mono, monospace' }}>
+                {selectedScreenshotIndex + 1} / {project.screenshots.length}
+              </span>
+              <button
+                type="button"
+                onClick={goToNextScreenshot}
+                disabled={selectedScreenshotIndex === project.screenshots.length - 1}
+                style={{ width: 40, height: 40, borderRadius: '50%', border: '1px solid rgba(255,255,255,0.16)', background: selectedScreenshotIndex === project.screenshots.length - 1 ? 'rgba(255,255,255,0.08)' : '#0f172a', color: '#e2e8f0', cursor: selectedScreenshotIndex === project.screenshots.length - 1 ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <ChevronRight size={18} />
+              </button>
+            </div>
+
+            <img src={project.screenshots[selectedScreenshotIndex]} alt="Captura ampliada" style={{ width: '100%', maxHeight: '85vh', objectFit: 'contain', borderRadius: 16, border: '1px solid rgba(255,255,255,0.08)' }} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
