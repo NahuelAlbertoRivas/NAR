@@ -89,10 +89,16 @@ export class ProjectsService {
 
         const { data, error } = await supabase.from('projects').insert(payload).select().single();
 
-        if (!error && data) {
+        if (error) {
+          console.error('ProjectsService create error:', error);
+          throw error;
+        }
+
+        if (data) {
           return this.toProjectRecord(data);
         }
-      } catch {
+      } catch (error) {
+        console.error('ProjectsService create failed:', error);
         // Fall back to the in-memory store if Supabase is unavailable.
       }
     }
@@ -134,10 +140,15 @@ export class ProjectsService {
         if (body.url !== undefined) updatePayload.url = body.url;
 
         const { data, error } = await supabase.from('projects').update(updatePayload).eq('id', id).select().single();
-        if (!error && data) {
+        if (error) {
+          console.error('ProjectsService update error:', error);
+          throw error;
+        }
+        if (data) {
           return this.toProjectRecord(data as Record<string, unknown>);
         }
-      } catch {
+      } catch (error) {
+        console.error('ProjectsService update failed:', error);
         // fall through to fallback store
       }
     }

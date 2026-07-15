@@ -13,7 +13,7 @@ async function bootstrap() {
     app.enableCors({
       origin: env.corsOrigin,
       methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-      allowedHeaders: 'Content-Type,x-admin-key',
+      allowedHeaders: 'Content-Type,x-admin-key,x-admin-token',
     });
   } else if (env.nodeEnv === 'development') {
     app.enableCors();

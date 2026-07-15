@@ -183,8 +183,13 @@ export class ContentService {
 
         const { data, error } = await supabase.from('articles').insert(payload).select().single();
 
-        if (!error && data) return this.toArticleRecord(data as Record<string, unknown>);
-      } catch {
+        if (error) {
+          console.error('ContentService createArticle error:', error);
+          throw error;
+        }
+        if (data) return this.toArticleRecord(data as Record<string, unknown>);
+      } catch (error) {
+        console.error('ContentService createArticle failed:', error);
         // fall through
       }
     }
@@ -210,8 +215,13 @@ export class ContentService {
         if (body.category !== undefined) update.category = body.category;
 
         const { data, error } = await supabase.from('articles').update(update).eq('id', id).select().single();
-        if (!error && data) return this.toArticleRecord(data as Record<string, unknown>);
-      } catch {
+        if (error) {
+          console.error('ContentService updateArticle error:', error);
+          throw error;
+        }
+        if (data) return this.toArticleRecord(data as Record<string, unknown>);
+      } catch (error) {
+        console.error('ContentService updateArticle failed:', error);
         // fall through
       }
     }
@@ -249,8 +259,13 @@ export class ContentService {
     if (supabase) {
       try {
         const { data, error } = await supabase.from('tech_stack').insert(item).select().single();
-        if (!error && data) return this.toTechRecord(data as Record<string, unknown>);
-      } catch {
+        if (error) {
+          console.error('ContentService createTechItem error:', error);
+          throw error;
+        }
+        if (data) return this.toTechRecord(data as Record<string, unknown>);
+      } catch (error) {
+        console.error('ContentService createTechItem failed:', error);
         // fall through
       }
     }
@@ -268,8 +283,13 @@ export class ContentService {
         if (body.level !== undefined) update.level = body.level;
 
         const { data, error } = await supabase.from('tech_stack').update(update).eq('name', name).select().single();
-        if (!error && data) return this.toTechRecord(data as Record<string, unknown>);
-      } catch {
+        if (error) {
+          console.error('ContentService updateTechItem error:', error);
+          throw error;
+        }
+        if (data) return this.toTechRecord(data as Record<string, unknown>);
+      } catch (error) {
+        console.error('ContentService updateTechItem failed:', error);
         // fall through
       }
     }
