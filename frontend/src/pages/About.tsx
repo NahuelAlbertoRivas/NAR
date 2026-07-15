@@ -1,11 +1,11 @@
 import { MapPin, Globe, Award } from 'lucide-react';
 
 const skills = [
-  { name: 'Backend Development (Java/Python)', level: 80 },
+  { name: 'Backend Development', level: 80 },
   { name: 'Integraciones & APIs', level: 60 },
   { name: 'Inteligencia Artificial / LLMs', level: 50 },
   { name: 'DevOps & Cloud', level: 60 },
-  { name: 'Frontend (Angular/React)', level: 40 },
+  { name: 'Frontend', level: 30 },
 ];
 
 const experience = [
