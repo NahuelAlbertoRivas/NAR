@@ -175,6 +175,15 @@ export async function getArticles(): Promise<Article[]> {
   return fallbackArticles;
 }
 
+export async function getArticleById(id: string): Promise<Article | null> {
+  const data = await readJson<Article>(`/content/articles/${id}`);
+  if (data) {
+    return data;
+  }
+
+  return fallbackArticles.find((article) => article.id === id) ?? null;
+}
+
 export async function getTechStack(): Promise<Array<{ name: string; category: string; icon: string; level: number }>> {
   const data = await readJson<Array<{ name: string; category: string; icon: string; level: number }>>('/content/tech');
   if (Array.isArray(data) && data.length > 0) {

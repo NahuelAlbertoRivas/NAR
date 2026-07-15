@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import { type Article } from '../data';
 import { getArticles } from '../services/portfolioApi';
 
-export default function Articles() {
+interface ArticlesProps {
+  onViewArticle?: (id: string) => void;
+}
+
+export default function Articles({ onViewArticle }: ArticlesProps) {
   const [articles, setArticles] = useState<Article[]>([]);
 
   useEffect(() => {
@@ -29,12 +33,11 @@ export default function Articles() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 1, paddingBottom: 48 }}>
         {articles.map((article, i) => (
-          <a
+          <button
             key={article.id}
-            href={article.url || '#'}
-            target={article.url ? '_blank' : undefined}
-            rel="noopener noreferrer"
-            style={{ textDecoration: 'none' }}
+            type="button"
+            onClick={() => onViewArticle?.(article.id)}
+            style={{ textDecoration: 'none', background: 'transparent', border: 'none', padding: 0, width: '100%', textAlign: 'left', cursor: 'pointer' }}
           >
             <div
               style={{
@@ -88,7 +91,7 @@ export default function Articles() {
                 <ArrowRight size={16} />
               </div>
             </div>
-          </a>
+          </button>
         ))}
       </div>
     </div>

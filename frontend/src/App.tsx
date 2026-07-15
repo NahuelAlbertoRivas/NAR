@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import Articles from './pages/Articles';
+import ArticleDetail from './pages/ArticleDetail';
 import About from './pages/About';
 import Tech from './pages/Tech';
 import Contact from './pages/Contact';
@@ -19,6 +20,7 @@ const HEADER_HEIGHT = 56;
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
   const [detailId, setDetailId] = useState<string | null>(null);
+  const [articleDetailId, setArticleDetailId] = useState<string | null>(null);
   const [globalSearch, setGlobalSearch] = useState('');
   const [sidebarSearch, setSidebarSearch] = useState('');
   const [filters, setFilters] = useState({
@@ -40,6 +42,7 @@ export default function App() {
       // ignore during SSR or restricted environments
     }
     setDetailId(null);
+    setArticleDetailId(null);
   };
 
   useEffect(() => {
@@ -63,14 +66,22 @@ export default function App() {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
+  const viewArticle = (id: string) => {
+    setArticleDetailId(id);
+    setCurrentPage('articles');
+  };
+
   const renderContent = () => {
     if (currentPage === 'projects' && detailId) {
       return <ProjectDetail projectId={detailId} onBack={() => setDetailId(null)} />;
     }
+    if (currentPage === 'articles' && articleDetailId) {
+      return <ArticleDetail articleId={articleDetailId} onBack={() => setArticleDetailId(null)} />;
+    }
     switch (currentPage) {
       case 'home': return <Home onNavigate={navigate} onViewProject={viewProject} />;
       case 'projects': return <Projects filters={filters} search={sidebarSearch || globalSearch} onViewProject={viewProject} />;
-      case 'articles': return <Articles />;
+      case 'articles': return <Articles onViewArticle={viewArticle} />;
       case 'about': return <About />;
       case 'tech': return <Tech />;
       case 'contact': return <Contact />;
