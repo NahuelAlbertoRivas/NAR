@@ -48,8 +48,8 @@ export default function About() {
                     src="https://lbsmiosdwybqczdyeuix.supabase.co/storage/v1/object/sign/recursos/perfil.jpg?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9jMWYyMTJhMC0yZmIzLTQ5MDgtOWU3Yy04NjA0YzhiYjgwMmQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJyZWN1cnNvcy9wZXJmaWwuanBnIiwic2NvcGUiOiJkb3dubG9hZCIsImlhdCI6MTc4NDEyMzkzOSwiZXhwIjoyMjU3MTYzOTM5fQ.C122hDKFkgPvjaWdWK79gjMpRwEYDO7JVeXzm87xl-w"
                     alt="NAR Logo"
                     style={{
-                      width: 100,
-                      height: 100,
+                      width: 200,
+                      height: 200,
                       borderRadius: '50%',
                       objectFit: 'cover',
                       border: '2px solid rgba(37,99,235,0.4)',
