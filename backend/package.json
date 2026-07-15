@@ -11,6 +11,8 @@
     "db:seed": "tsx scripts/seed.ts",
     "db:health": "tsx scripts/healthcheck.ts",
     "db:check": "tsx scripts/check-schema.ts"
+    ,
+    "db:seed:full": "tsx scripts/seed-from-frontend.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.4.10",
