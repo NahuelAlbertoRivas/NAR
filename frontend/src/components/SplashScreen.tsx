@@ -57,9 +57,6 @@ export default function SplashScreen({ visible }: SplashScreenProps) {
           style={{ width: '100%', height: '100%', border: 'none', background: '#05070b' }}
         />
       </div>
-      <div style={{ fontSize: 13, letterSpacing: '0.16em', color: '#8fa4c5', textTransform: 'uppercase', fontWeight: 600 }}>
-        NAR — DEVELOPMENT
-      </div>
     </div>
   );
 }
