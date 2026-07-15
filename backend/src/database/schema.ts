@@ -3,10 +3,33 @@ import { env } from '../config/env';
 import { lookup as dnsLookup } from 'dns/promises';
 
 function parseConnectionDetails(rawUrl?: string): { host: string; port: number; database: string; user: string; password: string; ssl: boolean | { rejectUnauthorized: boolean } } | null {
-  if (!rawUrl) {
-    return null;
+  if (!rawUrl) return null;
+
+  try {
+    const u = new URL(rawUrl);
+    if (!u.protocol.startsWith('postgres')) return null;
+
+    const host = u.hostname; // handles IPv6 bracketed hosts
+    const port = Number(u.port || 5432);
+    const database = (u.pathname || '').replace(/^\//, '') || 'postgres';
+    const user = u.username || '';
+    const password = u.password || '';
+    const sslMode = u.searchParams.get('sslmode');
+
+    return {
+      host,
+      port,
+      database,
+      user,
+      password,
+      ssl: sslMode === 'disable' ? false : { rejectUnauthorized: false },
+    };
+  } catch {
+    // fallback to legacy parsing for non-URL shapes
   }
 
+  // legacy fallback (best-effort)
+  if (!rawUrl) return null;
   const trimmed = rawUrl.trim();
   if (!trimmed.startsWith('postgres://') && !trimmed.startsWith('postgresql://')) {
     return null;
@@ -15,9 +38,7 @@ function parseConnectionDetails(rawUrl?: string): { host: string; port: number; 
   const protocol = trimmed.startsWith('postgresql://') ? 'postgresql://' : 'postgres://';
   const withoutProtocol = trimmed.slice(protocol.length);
   const atIndex = withoutProtocol.lastIndexOf('@');
-  if (atIndex === -1) {
-    return null;
-  }
+  if (atIndex === -1) return null;
 
   const authPart = withoutProtocol.slice(0, atIndex);
   const hostAndDatabasePart = withoutProtocol.slice(atIndex + 1);
@@ -66,10 +87,37 @@ export async function ensureDatabaseSchema(): Promise<void> {
     // If DNS lookup fails, continue with original host; schema init will skip on connection errors.
   }
 
+  console.log('DB schema init: connecting to', connectionDetails.host, 'port', connectionDetails.port);
   const client = new Client(connectionDetails);
 
   try {
-    await client.connect();
+    try {
+      await client.connect();
+    } catch (connErr: any) {
+      // If the initial connect failed due to IPv6/unreachable network, try IPv4 lookup and reconnect once.
+      if (connErr && (connErr.code === 'ENETUNREACH' || connErr.code === 'EADDRNOTAVAIL' || connErr.code === 'EAI_AGAIN')) {
+        try {
+          const lookupResult = await dnsLookup(connectionDetails.host, { family: 4 });
+          if (lookupResult && lookupResult.address) {
+            connectionDetails.host = lookupResult.address;
+            console.warn('DB schema init: retrying connect with IPv4 address', connectionDetails.host);
+            await client.end().catch(() => undefined);
+            // create new client with updated host
+            const client2 = new Client(connectionDetails);
+            await client2.connect();
+            // swap client reference so subsequent queries use connected client
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            (client as any) = client2;
+          } else {
+            throw connErr;
+          }
+        } catch (retryErr) {
+          throw retryErr;
+        }
+      } else {
+        throw connErr;
+      }
+    }
 
     await client.query(`
       CREATE TABLE IF NOT EXISTS public.projects (
