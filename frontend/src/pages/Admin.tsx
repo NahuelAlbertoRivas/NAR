@@ -7,30 +7,52 @@ function authHeaders() {
   return key ? { 'x-admin-key': key } : {};
 }
 
+type Tab = 'projects' | 'articles' | 'tech';
+
 export default function Admin() {
   const [logged, setLogged] = useState(Boolean(localStorage.getItem('adminKey')));
   const [keyInput, setKeyInput] = useState('');
+  const [tab, setTab] = useState<Tab>('projects');
+
   const [projects, setProjects] = useState<any[]>([]);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [tech, setTech] = useState<any[]>([]);
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (logged) fetchProjects();
+    if (logged) refreshAll();
   }, [logged]);
 
-  async function fetchProjects() {
+  async function refreshAll() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(`${API_BASE}/projects`);
-      if (!res.ok) throw new Error('Failed to fetch');
-      const data = await res.json();
-      setProjects(data);
-    } catch (err: any) {
-      setError(err?.message ?? 'Error');
+      await Promise.all([fetchProjects(), fetchArticles(), fetchTech()]);
+    } catch (e: any) {
+      setError(e?.message ?? 'Error');
     } finally {
       setLoading(false);
     }
+  }
+
+  async function fetchProjects() {
+    const res = await fetch(`${API_BASE}/projects`);
+    if (!res.ok) throw new Error('Failed to fetch projects');
+    setProjects(await res.json());
+  }
+
+  async function fetchArticles() {
+    const res = await fetch(`${API_BASE}/content/articles`);
+    if (!res.ok) throw new Error('Failed to fetch articles');
+    setArticles(await res.json());
+  }
+
+  async function fetchTech() {
+    const res = await fetch(`${API_BASE}/content/tech`);
+    if (!res.ok) throw new Error('Failed to fetch tech');
+    setTech(await res.json());
   }
 
   function login() {
@@ -44,27 +66,92 @@ export default function Admin() {
     setLogged(false);
   }
 
+  // CRUD actions
   async function createProject() {
     const title = prompt('Title') || 'Nuevo proyecto';
     const slug = prompt('Slug') || `nuevo-${Date.now()}`;
     const shortDescription = prompt('Short description') || '';
-
     const res = await fetch(`${API_BASE}/projects`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', ...authHeaders() },
       body: JSON.stringify({ title, slug, shortDescription, published: false }),
     });
+    if (res.ok) await fetchProjects(); else alert('Failed to create (check admin key)');
+  }
 
-    if (res.ok) fetchProjects(); else alert('Failed to create (check admin key)');
+  async function editProject(p: any) {
+    const title = prompt('Title', p.title) || p.title;
+    const slug = prompt('Slug', p.slug) || p.slug;
+    const shortDescription = prompt('Short description', p.shortDescription || '') || p.shortDescription;
+    const res = await fetch(`${API_BASE}/projects/${p.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ title, slug, shortDescription }),
+    });
+    if (res.ok) await fetchProjects(); else alert('Failed to update');
   }
 
   async function deleteProject(id: string) {
     if (!confirm('Confirm delete?')) return;
-    const res = await fetch(`${API_BASE}/projects/${id}`, {
-      method: 'DELETE',
-      headers: { ...authHeaders() },
+    const res = await fetch(`${API_BASE}/projects/${id}`, { method: 'DELETE', headers: { ...authHeaders() } });
+    if (res.ok) await fetchProjects(); else alert('Failed to delete');
+  }
+
+  async function createArticle() {
+    const title = prompt('Title') || 'Nuevo artículo';
+    const summary = prompt('Summary') || '';
+    const res = await fetch(`${API_BASE}/content/articles`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ title, summary }),
     });
-    if (res.ok) fetchProjects(); else alert('Failed to delete');
+    if (res.ok) await fetchArticles(); else alert('Failed to create article');
+  }
+
+  async function editArticle(a: any) {
+    const title = prompt('Title', a.title) || a.title;
+    const summary = prompt('Summary', a.summary || '') || a.summary;
+    const res = await fetch(`${API_BASE}/content/articles/${a.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ title, summary }),
+    });
+    if (res.ok) await fetchArticles(); else alert('Failed to update article');
+  }
+
+  async function deleteArticle(id: string) {
+    if (!confirm('Confirm delete?')) return;
+    const res = await fetch(`${API_BASE}/content/articles/${id}`, { method: 'DELETE', headers: { ...authHeaders() } });
+    if (res.ok) await fetchArticles(); else alert('Failed to delete article');
+  }
+
+  async function createTech() {
+    const name = prompt('Name') || `tech-${Date.now()}`;
+    const category = prompt('Category') || 'Other';
+    const level = Number(prompt('Level (0-100)') || '50');
+    const res = await fetch(`${API_BASE}/content/tech`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ name, category, level }),
+    });
+    if (res.ok) await fetchTech(); else alert('Failed to create tech');
+  }
+
+  async function editTech(t: any) {
+    const category = prompt('Category', t.category) || t.category;
+    const level = Number(prompt('Level (0-100)', String(t.level)) || t.level);
+    const res = await fetch(`${API_BASE}/content/tech/${encodeURIComponent(t.name)}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
+      body: JSON.stringify({ category, level }),
+    });
+    if (res.ok) await fetchTech(); else alert('Failed to update tech');
+  }
+
+  async function deleteTech(name: string) {
+    if (!confirm('Confirm delete?')) return;
+    const res = await fetch(`${API_BASE}/content/tech/${encodeURIComponent(name)}`, { method: 'DELETE', headers: { ...authHeaders() } });
+    if (res.ok) await fetchTech(); else alert('Failed to delete tech');
   }
 
   return (
@@ -80,14 +167,24 @@ export default function Admin() {
         </div>
       ) : (
         <div>
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 12 }}>
             <button onClick={logout} style={{ padding: '6px 10px' }}>Logout</button>
-            <button onClick={fetchProjects} style={{ padding: '6px 10px' }}>Refrescar</button>
-            <button onClick={createProject} style={{ padding: '6px 10px' }}>Nuevo proyecto</button>
+            <button onClick={refreshAll} style={{ padding: '6px 10px' }}>Refrescar</button>
+            <div style={{ marginLeft: 'auto' }}>
+              <button onClick={() => setTab('projects')} style={{ marginRight: 6 }}>Projects</button>
+              <button onClick={() => setTab('articles')} style={{ marginRight: 6 }}>Articles</button>
+              <button onClick={() => setTab('tech')}>Tech</button>
+            </div>
           </div>
 
-          <div style={{ marginTop: 16 }}>
-            {loading ? <div>Loading…</div> : (
+          {loading && <div>Loading…</div>}
+          {error && <div style={{ color: 'salmon' }}>{error}</div>}
+
+          {tab === 'projects' && (
+            <div>
+              <div style={{ marginBottom: 8 }}>
+                <button onClick={createProject}>Nuevo proyecto</button>
+              </div>
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ textAlign: 'left', borderBottom: '1px solid #1a2234' }}>
@@ -106,15 +203,77 @@ export default function Admin() {
                       <td>{p.slug}</td>
                       <td>{String(p.published)}</td>
                       <td>
-                        <button onClick={() => deleteProject(p.id)} style={{ marginRight: 8 }}>Delete</button>
+                        <button onClick={() => editProject(p)} style={{ marginRight: 8 }}>Edit</button>
+                        <button onClick={() => deleteProject(p.id)}>Delete</button>
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            )}
-            {error && <div style={{ color: 'salmon' }}>{error}</div>}
-          </div>
+            </div>
+          )}
+
+          {tab === 'articles' && (
+            <div>
+              <div style={{ marginBottom: 8 }}>
+                <button onClick={createArticle}>Nuevo artículo</button>
+              </div>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ textAlign: 'left', borderBottom: '1px solid #1a2234' }}>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Summary</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {articles.map((a) => (
+                    <tr key={a.id} style={{ borderBottom: '1px solid #0f1724' }}>
+                      <td style={{ padding: '8px 4px' }}>{a.id}</td>
+                      <td>{a.title}</td>
+                      <td>{a.summary}</td>
+                      <td>
+                        <button onClick={() => editArticle(a)} style={{ marginRight: 8 }}>Edit</button>
+                        <button onClick={() => deleteArticle(a.id)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {tab === 'tech' && (
+            <div>
+              <div style={{ marginBottom: 8 }}>
+                <button onClick={createTech}>Nuevo tech</button>
+              </div>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ textAlign: 'left', borderBottom: '1px solid #1a2234' }}>
+                    <th>Name</th>
+                    <th>Category</th>
+                    <th>Level</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {tech.map((t) => (
+                    <tr key={t.name} style={{ borderBottom: '1px solid #0f1724' }}>
+                      <td style={{ padding: '8px 4px' }}>{t.name}</td>
+                      <td>{t.category}</td>
+                      <td>{t.level}</td>
+                      <td>
+                        <button onClick={() => editTech(t)} style={{ marginRight: 8 }}>Edit</button>
+                        <button onClick={() => deleteTech(t.name)}>Delete</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       )}
     </div>
