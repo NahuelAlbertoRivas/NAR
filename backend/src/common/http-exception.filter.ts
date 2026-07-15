@@ -23,6 +23,13 @@ export class HttpExceptionFilter implements ExceptionFilter {
         ? exception.getResponse()
         : 'Internal server error';
 
+    console.error('Request failed:', {
+      path: request.url,
+      status,
+      message,
+      exception,
+    });
+
     response.status(status).json({
       statusCode: status,
       timestamp: new Date().toISOString(),

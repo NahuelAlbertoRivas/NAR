@@ -1,4 +1,4 @@
-import { projects as fallbackProjects, type Project } from '../data';
+import { projects as fallbackProjects, articles as fallbackArticles, techStack as fallbackTechStack, type Project, type Article } from '../data';
 
 interface PortfolioApiProject {
   id?: string;
@@ -102,4 +102,22 @@ export async function getProjectById(id: string): Promise<Project | null> {
   }
 
   return fallbackProjects.find((project) => project.id === id) ?? null;
+}
+
+export async function getArticles(): Promise<Article[]> {
+  const data = await readJson<Article[]>('/content/articles');
+  if (Array.isArray(data) && data.length > 0) {
+    return data;
+  }
+
+  return fallbackArticles;
+}
+
+export async function getTechStack(): Promise<Array<{ name: string; category: string; icon: string; level: number }>> {
+  const data = await readJson<Array<{ name: string; category: string; icon: string; level: number }>>('/content/tech');
+  if (Array.isArray(data) && data.length > 0) {
+    return data;
+  }
+
+  return fallbackTechStack;
 }

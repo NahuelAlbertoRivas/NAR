@@ -1,7 +1,25 @@
 import { Clock, ArrowRight } from 'lucide-react';
-import { articles } from '../data';
+import { useEffect, useState } from 'react';
+import { type Article } from '../data';
+import { getArticles } from '../services/portfolioApi';
 
 export default function Articles() {
+  const [articles, setArticles] = useState<Article[]>([]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    getArticles().then((data) => {
+      if (mounted) {
+        setArticles(data);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto' }}>
       <div style={{ padding: '40px 0 32px' }}>

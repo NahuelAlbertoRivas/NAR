@@ -1,4 +1,5 @@
-import { techStack } from '../data';
+import { useEffect, useState } from 'react';
+import { getTechStack } from '../services/portfolioApi';
 
 const categories = ['Lenguaje', 'Framework', 'DevOps', 'Cloud', 'Base de datos', 'Mensajería', 'IA', 'Herramientas'];
 
@@ -14,6 +15,22 @@ const categoryColors: Record<string, { bg: string; text: string; border: string 
 };
 
 export default function Tech() {
+  const [techStack, setTechStack] = useState<Array<{ name: string; category: string; icon: string; level: number }>>([]);
+
+  useEffect(() => {
+    let mounted = true;
+
+    getTechStack().then((data) => {
+      if (mounted) {
+        setTechStack(data);
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <div style={{ maxWidth: 1000, margin: '0 auto' }}>
       <div style={{ padding: '40px 0 32px' }}>
