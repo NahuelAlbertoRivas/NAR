@@ -184,25 +184,59 @@ export default function Contact() {
 
           <div style={{ height: 1, background: '#1a2234', margin: '4px 0' }} />
 
-          <button
+          <a
+            href="https://drive.google.com/uc?export=download&id=1AuMrzBX8qtJBI_D2jCA2UbdzdPVr2SPq"
+            target="_blank"
+            rel="noopener noreferrer"
             style={{
-              display: 'flex', alignItems: 'center', gap: 12,
-              background: '#0b0e18', border: '1px solid #1a2234',
-              borderRadius: 12, padding: '16px 18px',
-              cursor: 'pointer', color: '#e8edf5', fontSize: 14, fontWeight: 500,
-              transition: 'all 0.15s', width: '100%', textAlign: 'left',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 12,
+              background: '#0b0e18',
+              border: '1px solid #1a2234',
+              borderRadius: 12,
+              padding: '16px 18px',
+              cursor: 'pointer',
+              color: '#e8edf5',
+              fontSize: 14,
+              fontWeight: 500,
+              transition: 'all 0.15s',
+              width: '100%',
+              textAlign: 'left',
+              textDecoration: 'none',
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.borderColor = '#2563eb'; }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.borderColor = '#1a2234'; }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = '#2563eb';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = '#1a2234';
+            }}
           >
-            <div style={{ width: 38, height: 38, borderRadius: 8, background: 'rgba(37,99,235,0.1)', border: '1px solid rgba(37,99,235,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <div
+              style={{
+                width: 38,
+                height: 38,
+                borderRadius: 8,
+                background: 'rgba(37,99,235,0.1)',
+                border: '1px solid rgba(37,99,235,0.2)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0,
+              }}
+            >
               <Download size={16} color="#2563eb" />
             </div>
+
             <div>
-              <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#e8edf5' }}>Descargar CV</p>
-              <p style={{ margin: '2px 0 0', fontSize: 11, color: '#64748b' }}>PDF · Actualizado julio 2025</p>
+              <p style={{ margin: 0, fontSize: 13, fontWeight: 600, color: '#e8edf5' }}>
+                Descargar CV
+              </p>
+              <p style={{ margin: '2px 0 0', fontSize: 11, color: '#64748b' }}>
+                PDF · Actualizado en julio 2026
+              </p>
             </div>
-          </button>
+          </a>
 
           <div style={{ background: '#0b0e18', border: '1px solid #1a2234', borderRadius: 12, padding: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>

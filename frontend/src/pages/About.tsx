@@ -12,7 +12,7 @@ const experience = [
   {
     role: 'DB Backend Developer',
     company: 'WonderLab',
-    period: 'Jul. 2023 – Jan. 2025',
+    period: 'Jul. 2023 – Ene. 2025',
     description: 'Desarrollo de scripts y mantenimiento de servicio cloud.',
   }
 ];
