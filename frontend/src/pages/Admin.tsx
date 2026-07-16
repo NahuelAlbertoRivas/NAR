@@ -381,6 +381,7 @@ export default function Admin() {
       image: formState.image,
       github: formState.github,
       demo: formState.demo,
+      //videoUrl: formState.videoUrl,
       screenshots: parseList(String(formState.screenshots ?? '')),
       timeline: parseJson<Array<{ date: string; event: string }>>(String(formState.timeline || '[]'), []),
       challenges: parseList(String(formState.challenges ?? '')),
