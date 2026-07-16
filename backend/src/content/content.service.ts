@@ -68,7 +68,8 @@ export class ContentService {
     { name: 'Render', category: 'Cloud', icon: '🚀', level: 60 },
     { name: 'Scikit-learn', category: 'IA', icon: '📚', level: 50 },
     { name: 'Pandas', category: 'IA', icon: '🐼', level: 50 },
-    { name: 'Postman', category: 'Herramientas', icon: '🧪', level: 50 },
+    { name: 'Postman', category: 'Herramientas', icon: '🧪', level: 60 },
+    { name: 'Cisco Packet Tracer', category: 'Herramientas', icon: '🌐', level: 40 },
   ];
 
   async getArticles(): Promise<ArticleRecord[]> {
