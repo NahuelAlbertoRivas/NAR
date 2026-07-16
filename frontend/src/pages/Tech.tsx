@@ -35,7 +35,7 @@ export default function Tech() {
     <div style={{ maxWidth: 1000, margin: '0 auto' }}>
       <div style={{ padding: '40px 0 32px' }}>
         <h1 style={{ margin: '0 0 6px', fontSize: 28, fontWeight: 800, color: '#e8edf5', letterSpacing: '-0.02em' }}>Tech Stack</h1>
-        <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>Tecnologías con las que diseño, construyo y opero sistemas de software.</p>
+        <p style={{ margin: 0, fontSize: 14, color: '#64748b' }}>Índices de afinidad respecto a cada una de las tecnologías con las que diseño, construyo y opero sistemas de software.</p>
       </div>
 
       {categories.map((cat) => {

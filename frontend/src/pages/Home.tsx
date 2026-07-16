@@ -17,8 +17,8 @@ interface HomeProps {
 
 const metrics = [
   {
-    label: "Tecnologías dominadas",
-    value: "12+",
+    label: "Tecnologías adquiridas",
+    value: "20+",
     icon: <Cpu size={16} />,
   },
   {
