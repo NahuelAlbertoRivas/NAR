@@ -31,7 +31,7 @@ const CATEGORIES = ['Inteligencia Artificial', 'Automatización', 'Integraciones
 const LANGUAGES = ['Java', 'Python', 'TypeScript', 'Go'];
 const FRAMEWORKS = ['Spring Boot', 'Angular', 'FastAPI', 'React', 'Celery'];
 const TECHNOLOGIES = ['Docker', 'Kubernetes', 'AWS', 'Azure', 'Kafka', 'PostgreSQL', 'MongoDB'];
-const YEARS = ['2024', '2023'];
+const YEARS = ['2026', '2025', '2024', '2023'];
 
 export default function Sidebar({ currentPage, onNavigate, filters, onFilterChange, search, onSearch }: SidebarProps) {
   const [filtersOpen, setFiltersOpen] = useState(true);
