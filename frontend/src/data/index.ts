@@ -305,7 +305,8 @@ export const techStack = [
     { name: 'Python', category: 'Lenguaje', icon: '🐍', level: 60 },
     { name: 'Prolog', category: 'Lenguaje', icon: '📜', level: 40 },
     { name: 'Haskell', category: 'Lenguaje', icon: 'λ', level: 40 },
-    { name: 'TypeScript', category: 'Lenguaje', icon: '📘', level: 40 },
+    { name: 'TypeScript', category: 'Lenguaje', icon: '📘', level: 30 },
+    { name: 'Kotlin', category: 'Lenguaje', icon: '🅺', level: 30 },
     { name: 'Bash', category: 'Lenguaje', icon: '🔧', level: 40 },
     { name: 'PowerShell', category: 'Lenguaje', icon: '🖥️', level: 40 },
     { name: 'SQL Server', category: 'Base de datos', icon: '🗄️', level: 70 },
@@ -320,4 +321,5 @@ export const techStack = [
     { name: 'Scikit-learn', category: 'IA', icon: '📚', level: 50 },
     { name: 'Pandas', category: 'IA', icon: '🐼', level: 50 },
     { name: 'Postman', category: 'Herramientas', icon: '🧪', level: 50 },
+    { name: 'Cisco Packet Tracer', category: 'Herramientas', icon: '🌐', level: 40 },
 ];
