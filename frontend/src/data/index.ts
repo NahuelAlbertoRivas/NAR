@@ -306,7 +306,7 @@ export const techStack = [
     { name: 'Prolog', category: 'Lenguaje', icon: '📜', level: 40 },
     { name: 'Haskell', category: 'Lenguaje', icon: 'λ', level: 40 },
     { name: 'TypeScript', category: 'Lenguaje', icon: '📘', level: 30 },
-    { name: 'Kotlin', category: 'Lenguaje', icon: '🅺', level: 30 },
+    { name: 'Kotlin', category: 'Lenguaje', icon: '🅺', level: 40 },
     { name: 'Bash', category: 'Lenguaje', icon: '🔧', level: 40 },
     { name: 'PowerShell', category: 'Lenguaje', icon: '🖥️', level: 40 },
     { name: 'SQL Server', category: 'Base de datos', icon: '🗄️', level: 70 },
