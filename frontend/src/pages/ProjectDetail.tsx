@@ -128,7 +128,7 @@ export default function ProjectDetail({ projectId, onBack }: ProjectDetailProps)
         <div style={{ position: 'absolute', top: 20, right: 20, display: 'flex', gap: 8 }}>
           {project.github && (
             <a href={project.github} target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(8px)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, padding: '7px 14px', color: '#e8edf5', fontSize: 12, fontWeight: 500, textDecoration: 'none', transition: 'all 0.15s' }} onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(0,0,0,0.8)'; }} onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(0,0,0,0.6)'; }}>
-              <GitFork size={13} /> GitHub
+              <GitFork size={13} /> Repositorio
             </a>
           )}
           {project.demo && (
