@@ -322,5 +322,5 @@ export const techStack = [
     { name: 'Pandas', category: 'IA', icon: '🐼', level: 50 },
     { name: 'Postman', category: 'Herramientas', icon: '🧪', level: 50 },
     { name: 'Cisco Packet Tracer', category: 'Herramientas', icon: '🌐', level: 40 },
-    { name: 'JUnit', category: 'Testing', icon: '𝐉', level: 50 },
+    { name: 'JUnit', category: 'Herramientas', icon: '𝐉', level: 50 },
 ];
