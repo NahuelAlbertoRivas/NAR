@@ -177,8 +177,8 @@ export default function Contact() {
           <ContactLink
             icon={<Mail size={18} />}
             label="Email directo"
-            handle="nombre@email.com"
-            url="mailto:nombre@email.com"
+            handle="nahuelrivas41@gmail.com"
+            url="mailto:nahuelrivas41@gmail.com"
             color="#06b6d4"
           />
 
