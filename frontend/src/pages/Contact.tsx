@@ -185,7 +185,7 @@ export default function Contact() {
           <div style={{ height: 1, background: '#1a2234', margin: '4px 0' }} />
 
           <a
-            href="https://drive.google.com/uc?export=download&id=1AuMrzBX8qtJBI_D2jCA2UbdzdPVr2SPq"
+            href="https://drive.google.com/uc?export=download&id=10DoHBlCL5kMcRZSGP4TFUZNQRfHvxNSp"
             target="_blank"
             rel="noopener noreferrer"
             style={{
